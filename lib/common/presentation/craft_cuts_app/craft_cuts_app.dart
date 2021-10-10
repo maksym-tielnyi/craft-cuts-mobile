@@ -1,12 +1,17 @@
 import 'package:craft_cuts_mobile/auth/presentation/pages/login_page.dart';
 import 'package:craft_cuts_mobile/auth/presentation/pages/register_page.dart';
 import 'package:craft_cuts_mobile/auth/presentation/pages/sign_in_page.dart';
+import 'package:craft_cuts_mobile/auth/presentation/state/auth_notifier.dart';
 import 'package:craft_cuts_mobile/common/presentation/injector/widgets/injection_container.dart';
 import 'package:craft_cuts_mobile/common/presentation/navigation/route_names.dart';
+import 'package:craft_cuts_mobile/home/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class CraftCutsApp extends StatelessWidget {
+  final _navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
     return InjectionContainer(
@@ -75,11 +80,33 @@ class CraftCutsApp extends StatelessWidget {
             ),
           ),
         ),
-        initialRoute: RouteNames.loginPage,
+        navigatorKey: _navigatorKey,
+        builder: (context, widget) {
+          final navigator = _navigatorKey.currentState;
+          final authNotifier =
+              Provider.of<AuthNotifier>(context, listen: false);
+          authNotifier.addListener(() {
+            if (!authNotifier.isLoading) {
+              if (authNotifier.isLoggedIn) {
+                navigator!.pushNamedAndRemoveUntil(
+                  RouteNames.homePage,
+                  (_) => false,
+                );
+              } else {
+                navigator!.pushNamedAndRemoveUntil(
+                  RouteNames.loginPage,
+                  (_) => false,
+                );
+              }
+            }
+          });
+          return widget!;
+        },
         routes: {
           RouteNames.loginPage: (_) => LoginPage(),
           RouteNames.signInPage: (_) => SignInPage(),
           RouteNames.registerPage: (_) => RegisterPage(),
+          RouteNames.homePage: (_) => HomePage(),
         },
       ),
     );
