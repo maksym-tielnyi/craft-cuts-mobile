@@ -1,3 +1,4 @@
+import 'package:craft_cuts_mobile/common/presentation/navigation/route_names.dart';
 import 'package:craft_cuts_mobile/common/presentation/strings/common_strings.dart';
 import 'package:flutter/material.dart';
 
@@ -32,20 +33,24 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 80.0,
-                          vertical: 12.0,
-                        ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 17.0,
+                      ),
+                      child: ElevatedButton(
+                        onPressed: () {},
                         child: Text(
                           CommonStrings.login,
                         ),
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // TODO register button calls register use case
+
+                        Navigator.of(context)
+                            .pushNamed(RouteNames.registerPage);
+                      },
                       child: Text(CommonStrings.register),
                       style: Theme.of(context).textButtonTheme.style!.copyWith(
                             foregroundColor:
