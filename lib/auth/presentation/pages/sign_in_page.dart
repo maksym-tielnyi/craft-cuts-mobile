@@ -1,6 +1,9 @@
+import 'package:craft_cuts_mobile/auth/presentation/state/auth_notifier.dart';
+import 'package:craft_cuts_mobile/common/presentation/loading_indicator_overlay/widgets/loading_indicator_overlay.dart';
 import 'package:craft_cuts_mobile/common/presentation/navigation/route_names.dart';
 import 'package:craft_cuts_mobile/common/presentation/strings/common_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -26,99 +29,107 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
+    final authNotifier = Provider.of<AuthNotifier>(context);
+
     const inputFieldsPadding = EdgeInsets.symmetric(
       horizontal: 20.0,
       vertical: 7.0,
     );
 
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 10.0),
-                child: Stack(
-                  children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(Icons.close),
-                        ),
-                      ],
-                    ),
-                    Positioned.fill(
-                      child: Center(
-                        child: Text(
-                          CommonStrings.login,
-                          style: Theme.of(context).textTheme.headline2,
-                        ),
+    return LoadingIndicatorOverlay(
+      isLoading: authNotifier.isLoading,
+      child: Scaffold(
+        body: SafeArea(
+          child: Container(
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10.0),
+                  child: Stack(
+                    children: [
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: Icon(Icons.close),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              Form(
-                key: _userDataFormKey,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: inputFieldsPadding,
-                      child: TextFormField(
-                        controller: _emailFieldController,
-                        validator: _requiredFieldValidator,
-                        decoration: InputDecoration(
-                          hintText: CommonStrings.email,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: inputFieldsPadding,
-                      child: TextFormField(
-                        controller: _passwordFieldController,
-                        obscureText: !_passwordVisible,
-                        validator: _requiredFieldValidator,
-                        decoration: InputDecoration(
-                          hintText: CommonStrings.password,
-                          suffixIcon: TextButton(
-                            onPressed: _passwordVisibleChanged,
-                            child: Text(_passwordVisible
-                                ? CommonStrings.hide
-                                : CommonStrings.show),
+                      Positioned.fill(
+                        child: Center(
+                          child: Text(
+                            CommonStrings.login,
+                            style: Theme.of(context).textTheme.headline2,
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              Spacer(flex: 1),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
-                child: ElevatedButton(
-                  onPressed: _enableSignInButton ? _signInButtonPressed : null,
-                  child: Text(CommonStrings.login),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
-                child: TextButton(
-                  // TODO: fix button text color
-                  style: Theme.of(context).textButtonTheme.style!.copyWith(
-                        foregroundColor:
-                            MaterialStateProperty.all(Colors.black),
-                      ),
-                  onPressed: _doNotHaveAccountButtonPressed,
-                  child: Text(
-                    CommonStrings.doNotHaveAccount,
-                    textAlign: TextAlign.center,
+                    ],
                   ),
                 ),
-              ),
-            ],
+                Form(
+                  key: _userDataFormKey,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: inputFieldsPadding,
+                        child: TextFormField(
+                          controller: _emailFieldController,
+                          validator: _requiredFieldValidator,
+                          decoration: InputDecoration(
+                            hintText: CommonStrings.email,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: inputFieldsPadding,
+                        child: TextFormField(
+                          controller: _passwordFieldController,
+                          obscureText: !_passwordVisible,
+                          validator: _requiredFieldValidator,
+                          decoration: InputDecoration(
+                            hintText: CommonStrings.password,
+                            suffixIcon: TextButton(
+                              onPressed: _passwordVisibleChanged,
+                              child: Text(_passwordVisible
+                                  ? CommonStrings.hide
+                                  : CommonStrings.show),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Spacer(flex: 1),
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+                  child: ElevatedButton(
+                    onPressed:
+                        _enableSignInButton ? _signInButtonPressed : null,
+                    child: Text(CommonStrings.login),
+                  ),
+                ),
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+                  child: TextButton(
+                    // TODO: fix button text color
+                    style: Theme.of(context).textButtonTheme.style!.copyWith(
+                          foregroundColor:
+                              MaterialStateProperty.all(Colors.black),
+                        ),
+                    onPressed: _doNotHaveAccountButtonPressed,
+                    child: Text(
+                      CommonStrings.doNotHaveAccount,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -141,7 +152,15 @@ class _SignInPageState extends State<SignInPage> {
     });
   }
 
-  void _signInButtonPressed() {}
+  void _signInButtonPressed() {
+    final authNotifier = Provider.of<AuthNotifier>(context, listen: false);
+    if (_userDataFormKey.currentState!.validate()) {
+      authNotifier.signInWithEmail(
+        _emailFieldController.text,
+        _passwordFieldController.text,
+      );
+    }
+  }
 
   void _doNotHaveAccountButtonPressed() {
     Navigator.of(context).pushReplacementNamed(RouteNames.registerPage);
