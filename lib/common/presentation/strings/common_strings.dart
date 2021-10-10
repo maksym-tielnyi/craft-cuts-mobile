@@ -1,4 +1,5 @@
 class CommonStrings {
+  static const String craftCuts = 'Craft Cuts';
   static const String login = 'Войти';
   static const String register = 'Зарегистрироваться';
   static const String name = 'Имя';
@@ -11,4 +12,6 @@ class CommonStrings {
   static const String alreadyHaveAccount =
       'У Вас уже есть аккаунт? Войдите тут';
   static const String emptyInputFieldMessage = 'Это поле должно быть заполнено';
+  static const String doNotHaveAccount =
+      'У Вас еще нет аккаунта? Зарегистрируйтесь тут';
 }

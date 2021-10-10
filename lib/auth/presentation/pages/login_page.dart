@@ -13,10 +13,11 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-            image: DecorationImage(
-          image: AssetImage('assets/images/login_screen_background.png'),
-          fit: BoxFit.cover,
-        )),
+          image: DecorationImage(
+            image: AssetImage('assets/images/login_screen_background.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: SafeArea(
           child: Column(
             children: [
@@ -24,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
                 flex: 1,
                 child: Center(
                   child: Text(
-                    'Craft Cuts',
+                    CommonStrings.craftCuts,
                     style: Theme.of(context).textTheme.headline1,
                   ),
                 ),
@@ -38,7 +39,10 @@ class _LoginPageState extends State<LoginPage> {
                         horizontal: 17.0,
                       ),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pushNamed(RouteNames.signInPage);
+                        },
                         child: Text(
                           CommonStrings.login,
                         ),
@@ -46,8 +50,6 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     TextButton(
                       onPressed: () {
-                        // TODO register button calls register use case
-
                         Navigator.of(context)
                             .pushNamed(RouteNames.registerPage);
                       },

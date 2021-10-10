@@ -1,5 +1,6 @@
 import 'package:craft_cuts_mobile/auth/presentation/pages/login_page.dart';
 import 'package:craft_cuts_mobile/auth/presentation/pages/register_page.dart';
+import 'package:craft_cuts_mobile/auth/presentation/pages/sign_in_page.dart';
 import 'package:craft_cuts_mobile/common/presentation/injector/widgets/injection_container.dart';
 import 'package:craft_cuts_mobile/common/presentation/navigation/route_names.dart';
 import 'package:flutter/material.dart';
@@ -77,6 +78,7 @@ class CraftCutsApp extends StatelessWidget {
         initialRoute: RouteNames.loginPage,
         routes: {
           RouteNames.loginPage: (_) => LoginPage(),
+          RouteNames.signInPage: (_) => SignInPage(),
           RouteNames.registerPage: (_) => RegisterPage(),
         },
       ),

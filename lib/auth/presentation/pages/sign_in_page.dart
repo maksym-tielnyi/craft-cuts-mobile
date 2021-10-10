@@ -2,27 +2,23 @@ import 'package:craft_cuts_mobile/common/presentation/navigation/route_names.dar
 import 'package:craft_cuts_mobile/common/presentation/strings/common_strings.dart';
 import 'package:flutter/material.dart';
 
-class RegisterPage extends StatefulWidget {
+class SignInPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _RegisterPageState();
+  State<StatefulWidget> createState() => _SignInPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _SignInPageState extends State<SignInPage> {
   final _userDataFormKey = GlobalKey<FormState>();
-  final _nameFieldController = TextEditingController();
   final _emailFieldController = TextEditingController();
   final _passwordFieldController = TextEditingController();
   bool _passwordVisible = false;
-  bool _receiveNewsEnabled = true;
 
-  bool get _enableRegisterButton =>
-      _nameFieldController.text.isNotEmpty &&
+  bool get _enableSignInButton =>
       _emailFieldController.text.isNotEmpty &&
       _passwordFieldController.text.isNotEmpty;
 
   @override
   void initState() {
-    _nameFieldController.addListener(_inputFieldValueChangeListener);
     _emailFieldController.addListener(_inputFieldValueChangeListener);
     _passwordFieldController.addListener(_inputFieldValueChangeListener);
     super.initState();
@@ -42,28 +38,25 @@ class _RegisterPageState extends State<RegisterPage> {
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10.0),
-                child: Row(
+                child: Stack(
                   children: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Icon(Icons.close),
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(Icons.close),
+                        ),
+                      ],
                     ),
-                    Expanded(
+                    Positioned.fill(
                       child: Center(
                         child: Text(
-                          CommonStrings.register,
+                          CommonStrings.login,
                           style: Theme.of(context).textTheme.headline2,
                         ),
                       ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushReplacementNamed(RouteNames.signInPage);
-                      },
-                      child: Text(CommonStrings.login),
                     ),
                   ],
                 ),
@@ -72,16 +65,6 @@ class _RegisterPageState extends State<RegisterPage> {
                 key: _userDataFormKey,
                 child: Column(
                   children: [
-                    Padding(
-                      padding: inputFieldsPadding,
-                      child: TextFormField(
-                        controller: _nameFieldController,
-                        validator: _requiredFieldValidator,
-                        decoration: InputDecoration(
-                          hintText: CommonStrings.name,
-                        ),
-                      ),
-                    ),
                     Padding(
                       padding: inputFieldsPadding,
                       child: TextFormField(
@@ -112,19 +95,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   ],
                 ),
               ),
-              CheckboxListTile(
-                value: _receiveNewsEnabled,
-                onChanged: _receiveNewsEnabledChanged,
-                title: Text(CommonStrings.receiveNewsAndNotificationsAgreement),
-                controlAffinity: ListTileControlAffinity.leading,
-              ),
               Spacer(flex: 1),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
                 child: ElevatedButton(
-                  onPressed:
-                      _enableRegisterButton ? _registerButtonPressed : null,
-                  child: Text(CommonStrings.register),
+                  onPressed: _enableSignInButton ? _signInButtonPressed : null,
+                  child: Text(CommonStrings.login),
                 ),
               ),
               Padding(
@@ -135,8 +111,11 @@ class _RegisterPageState extends State<RegisterPage> {
                         foregroundColor:
                             MaterialStateProperty.all(Colors.black),
                       ),
-                  onPressed: _alreadyHaveAccountButtonPressed,
-                  child: Text(CommonStrings.alreadyHaveAccount),
+                  onPressed: _doNotHaveAccountButtonPressed,
+                  child: Text(
+                    CommonStrings.doNotHaveAccount,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
             ],
@@ -146,24 +125,8 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  void _passwordVisibleChanged() {
-    setState(() {
-      _passwordVisible = !_passwordVisible;
-    });
-  }
-
-  void _receiveNewsEnabledChanged(bool? value) {
-    setState(() {
-      _receiveNewsEnabled = value ?? _receiveNewsEnabled;
-    });
-  }
-
-  void _registerButtonPressed() {
-    bool isInputValid = _userDataFormKey.currentState!.validate();
-  }
-
-  void _alreadyHaveAccountButtonPressed() {
-    Navigator.of(context).pushReplacementNamed(RouteNames.signInPage);
+  void _inputFieldValueChangeListener() {
+    setState(() {});
   }
 
   String? _requiredFieldValidator(String? value) {
@@ -172,7 +135,15 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  void _inputFieldValueChangeListener() {
-    setState(() {});
+  void _passwordVisibleChanged() {
+    setState(() {
+      _passwordVisible = !_passwordVisible;
+    });
+  }
+
+  void _signInButtonPressed() {}
+
+  void _doNotHaveAccountButtonPressed() {
+    Navigator.of(context).pushReplacementNamed(RouteNames.registerPage);
   }
 }
