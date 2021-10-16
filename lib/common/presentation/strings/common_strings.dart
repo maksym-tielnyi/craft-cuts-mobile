@@ -14,4 +14,10 @@ class CommonStrings {
   static const String emptyInputFieldMessage = 'Это поле должно быть заполнено';
   static const String doNotHaveAccount =
       'У Вас еще нет аккаунта? Зарегистрируйтесь тут';
+
+  static const String home = 'Главная';
+  static const String services = 'Услуги';
+  static const String masters = 'Мастера';
+  static const String book = 'Записаться';
+  static const String profile = 'Профиль';
 }

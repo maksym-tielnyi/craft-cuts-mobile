@@ -26,6 +26,7 @@ dependencies:
   lint: ^1.7.2
   provider: ^6.0.1
   google_fonts: ^2.1.0
+  flutter_svg: ^0.23.0+1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -54,6 +55,11 @@ flutter:
 
   assets:
     - assets/images/login_screen_background.png
+    - assets/icons/home.svg
+    - assets/icons/flame.svg
+    - assets/icons/calendar.svg
+    - assets/icons/profile.svg
+    - assets/icons/notification.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -4,7 +4,7 @@ import 'package:craft_cuts_mobile/auth/presentation/pages/sign_in_page.dart';
 import 'package:craft_cuts_mobile/auth/presentation/state/auth_notifier.dart';
 import 'package:craft_cuts_mobile/common/presentation/injector/widgets/injection_container.dart';
 import 'package:craft_cuts_mobile/common/presentation/navigation/route_names.dart';
-import 'package:craft_cuts_mobile/home/presentation/pages/home_page.dart';
+import 'package:craft_cuts_mobile/main/presentation/pages/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -106,7 +106,7 @@ class CraftCutsApp extends StatelessWidget {
           RouteNames.loginPage: (_) => LoginPage(),
           RouteNames.signInPage: (_) => SignInPage(),
           RouteNames.registerPage: (_) => RegisterPage(),
-          RouteNames.homePage: (_) => HomePage(),
+          RouteNames.homePage: (_) => MainPage(),
         },
       ),
     );
