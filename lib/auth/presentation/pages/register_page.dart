@@ -171,11 +171,15 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void _registerButtonPressed() {
     final authNotifier = Provider.of<AuthNotifier>(context, listen: false);
+
+    // TODO pass users phone
+
     if (_userDataFormKey.currentState!.validate()) {
       authNotifier.registerAccount(
         _emailFieldController.text,
         _passwordFieldController.text,
         _nameFieldController.text,
+        '',
         _receiveNewsEnabled,
       );
     }

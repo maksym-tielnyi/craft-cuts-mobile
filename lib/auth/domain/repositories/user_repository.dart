@@ -1,13 +1,16 @@
+import 'package:craft_cuts_mobile/auth/domain/entities/user.dart';
+
 abstract class UserRepository {
-  void registerUser(
-    String email,
-    String password,
-    String name,
-    bool agreedToReceiveNews,
-  );
+  Stream<User?> get currentUser;
+
+  Stream<Exception?> get exceptionStream;
+
+  void registerUser(User userData);
 
   void signInWithEmailAndPassword(
     String email,
     String password,
   );
+
+  void signOut();
 }

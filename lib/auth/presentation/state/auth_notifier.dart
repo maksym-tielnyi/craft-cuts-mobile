@@ -1,13 +1,25 @@
 import 'dart:async';
 
 import 'package:craft_cuts_mobile/auth/domain/entities/user.dart';
+import 'package:craft_cuts_mobile/auth/domain/usecases/params/register_user_param.dart';
+import 'package:craft_cuts_mobile/auth/domain/usecases/params/signin_param.dart';
+import 'package:craft_cuts_mobile/auth/domain/usecases/register_user_usecase.dart';
+import 'package:craft_cuts_mobile/auth/domain/usecases/signin_usecase.dart';
 import 'package:flutter/cupertino.dart';
 
 class AuthNotifier extends ChangeNotifier {
+  final RegisterUserUsecase _registerUserUsecase;
+  final SignInUsecase _signInUsecase;
+
   User? _user;
   bool _isLoading = false;
 
-  AuthNotifier();
+  late StreamSubscription _userSubscription;
+
+  AuthNotifier(
+    this._registerUserUsecase,
+    this._signInUsecase,
+  );
 
   bool get isLoggedIn => _user != null;
 
@@ -17,15 +29,15 @@ class AuthNotifier extends ChangeNotifier {
     String email,
     String password,
     String name,
+    String phone,
     bool agreedToReceiveNews,
   ) async {
-    // TODO change register implementation
-
     _changeLoadingState(true);
-
-    await Future.delayed(Duration(seconds: 4));
-    _user = User(0, email, name, password);
-
+    await _registerUserUsecase(
+      RegisterUserParam(
+        User(null, email, name, password, phone),
+      ),
+    );
     _changeLoadingState(false);
   }
 
@@ -33,26 +45,34 @@ class AuthNotifier extends ChangeNotifier {
     String email,
     String password,
   ) async {
-    // TODO change sign in implementation
-
     _changeLoadingState(true);
-
-    await Future.delayed(Duration(seconds: 2));
-    _user = User(0, email, 'name', password);
-
+    await _signInUsecase(SignInParam(email, password));
     _changeLoadingState(false);
   }
 
   Future<void> signOut() async {
-    // TODO change sign out implementation
-
     _changeLoadingState(true);
-
+    // TODO implement sign out
     _changeLoadingState(false);
+  }
+
+  void subscribeToAuthUpdates(Stream<User?> userStream) {
+    _userSubscription = userStream.listen(_userStreamListener);
   }
 
   void _changeLoadingState(bool isLoading) {
     _isLoading = isLoading;
     notifyListeners();
+  }
+
+  void _userStreamListener(User? user) {
+    _user = user;
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _userSubscription.cancel();
+    super.dispose();
   }
 }
