@@ -20,4 +20,6 @@ class CommonStrings {
   static const String masters = 'Мастера';
   static const String book = 'Записаться';
   static const String profile = 'Профиль';
+
+  static const String ok = 'Ok';
 }

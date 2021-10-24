@@ -1,6 +1,9 @@
+import 'package:craft_cuts_mobile/auth/presentation/state/auth_notifier.dart';
+import 'package:craft_cuts_mobile/auth/presentation/widgets/auth_error_dialog.dart';
 import 'package:craft_cuts_mobile/common/presentation/navigation/route_names.dart';
 import 'package:craft_cuts_mobile/common/presentation/strings/common_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -8,6 +11,16 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  late AuthNotifier _authNotifier;
+
+  @override
+  void initState() {
+    _authNotifier = Provider.of<AuthNotifier>(context, listen: false);
+
+    _authNotifier.addListener(_authNotifierListener);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,5 +81,22 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  void _authNotifierListener() {
+    if (_authNotifier.signInStateViewModel.lastException != null) {
+      showDialog(
+        context: context,
+        builder: (context) => AuthErrorDialog(
+          _authNotifier.signInStateViewModel.lastException.toString(),
+        ),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _authNotifier.removeListener(_authNotifierListener);
+    super.dispose();
   }
 }
