@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:craft_cuts_mobile/auth/domain/entities/user.dart';
+import 'package:craft_cuts_mobile/auth/domain/repositories/exceptions/auth_response_exception.dart';
 import 'package:craft_cuts_mobile/auth/domain/usecases/params/register_user_param.dart';
 import 'package:craft_cuts_mobile/auth/domain/usecases/params/signin_param.dart';
 import 'package:craft_cuts_mobile/auth/domain/usecases/register_user_usecase.dart';
 import 'package:craft_cuts_mobile/auth/domain/usecases/signin_usecase.dart';
+import 'package:craft_cuts_mobile/auth/presentation/view_models/sign_in_state_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
 
 class AuthNotifier extends ChangeNotifier {
@@ -25,6 +27,10 @@ class AuthNotifier extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
+  var _signInStateViewModel = SignInStateViewModel(null);
+
+  SignInStateViewModel get signInStateViewModel => _signInStateViewModel;
+
   Future<void> registerAccount(
     String email,
     String password,
@@ -32,25 +38,40 @@ class AuthNotifier extends ChangeNotifier {
     String phone,
     bool agreedToReceiveNews,
   ) async {
+    _handleAuthError(null);
     _changeLoadingState(true);
-    await _registerUserUsecase(
-      RegisterUserParam(
-        User(null, email, name, password, phone),
-      ),
-    );
-    _changeLoadingState(false);
+
+    try {
+      await _registerUserUsecase(
+        RegisterUserParam(
+          User(null, email, name, password, phone),
+        ),
+      );
+    } on AuthResponseException catch (e) {
+      _handleAuthError(e);
+    } finally {
+      _changeLoadingState(false);
+    }
   }
 
   Future<void> signInWithEmail(
     String email,
     String password,
   ) async {
+    _handleAuthError(null);
     _changeLoadingState(true);
-    await _signInUsecase(SignInParam(email, password));
-    _changeLoadingState(false);
+
+    try {
+      await _signInUsecase(SignInParam(email, password));
+    } on AuthResponseException catch (e) {
+      _handleAuthError(e);
+    } finally {
+      _changeLoadingState(false);
+    }
   }
 
   Future<void> signOut() async {
+    _handleAuthError(null);
     _changeLoadingState(true);
     // TODO implement sign out
     _changeLoadingState(false);
@@ -67,7 +88,14 @@ class AuthNotifier extends ChangeNotifier {
 
   void _userStreamListener(User? user) {
     _user = user;
+    if (user != null) {
+      _handleAuthError(null);
+    }
     notifyListeners();
+  }
+
+  void _handleAuthError(Exception? exception) {
+    _signInStateViewModel = SignInStateViewModel(exception);
   }
 
   @override

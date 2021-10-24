@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:craft_cuts_mobile/auth/domain/entities/user.dart';
+import 'package:craft_cuts_mobile/auth/domain/repositories/exceptions/auth_response_exception.dart';
 import 'package:craft_cuts_mobile/auth/domain/repositories/user_repository.dart';
 import 'package:http/http.dart' as http;
 
@@ -14,27 +15,19 @@ class UserRepositoryImpl implements UserRepository {
 
   final _client = http.Client();
   final _currentUserController = StreamController<User?>();
-  final _errorController = StreamController<Exception?>();
 
   Stream<User?> get currentUser => _currentUserController.stream;
-
-  Stream<Exception?> get exceptionStream => _errorController.stream;
 
   @override
   void registerUser(User userData) async {
     final requestUri = Uri.https(_apiEndpoint, _unencodedRegisterPath);
     final bodyJson = userData.toMap();
 
-    try {
-      final response = await _client.post(
-        requestUri,
-        body: bodyJson,
-      );
-      _processRegisterResponse(response);
-    } on Exception catch (e) {
-      _errorController.sink.add(e);
-      _currentUserController.sink.add(null);
-    }
+    final response = await _client.post(
+      requestUri,
+      body: bodyJson,
+    );
+    _processRegisterResponse(response);
   }
 
   @override
@@ -50,13 +43,8 @@ class UserRepositoryImpl implements UserRepository {
       queryParams,
     );
 
-    try {
-      final response = await _client.post(requestUri);
-      _processSignInResponse(response);
-    } on Exception catch (e) {
-      _errorController.sink.add(e);
-      _currentUserController.sink.add(null);
-    }
+    final response = await _client.post(requestUri);
+    _processSignInResponse(response);
   }
 
   @override
@@ -67,44 +55,43 @@ class UserRepositoryImpl implements UserRepository {
   void _processSignInResponse(http.Response response) {
     if (response.statusCode == HttpStatus.ok) {
       _processSignInResponseOk(response);
+    } else if (response.statusCode == HttpStatus.notFound) {
+      _processStatusCode404NotFound(response);
+    } else {
+      throw AuthResponseException(response.statusCode.toString());
     }
   }
 
   void _processRegisterResponse(http.Response response) {
     if (response.statusCode == HttpStatus.ok) {
       _processRegisterResponseOK(response);
+    } else if (response.statusCode == HttpStatus.notFound) {
+      _processStatusCode404NotFound(response);
+    } else {
+      throw AuthResponseException(response.statusCode.toString());
     }
   }
 
   void _processSignInResponseOk(http.Response response) {
     final decodedResponse = _parseHttpResponse(response);
-
-    try {
-      final user = User.fromJson(decodedResponse);
-      _currentUserController.sink.add(user);
-    } on Exception catch (e) {
-      _processUserAuthenticationError(e);
-    }
+    final user = User.fromJson(decodedResponse);
+    _currentUserController.sink.add(user);
   }
 
   void _processRegisterResponseOK(http.Response response) {
     final decodedResponse = _parseHttpResponse(response);
+    final user = User.fromJson(decodedResponse);
+    _currentUserController.sink.add(user);
+  }
 
-    try {
-      final user = User.fromJson(decodedResponse);
-      _currentUserController.sink.add(user);
-    } on Exception catch (e) {
-      _processUserAuthenticationError(e);
-    }
+  void _processStatusCode404NotFound(http.Response response) {
+    final bodyMap = _parseHttpResponse(response);
+    final parsedReason = bodyMap['title'];
+    throw AuthResponseException(parsedReason ?? response.statusCode.toString());
   }
 
   Map<String, dynamic> _parseHttpResponse(http.Response response) {
     final decodedString = utf8.decode(response.bodyBytes);
     return jsonDecode(decodedString) as Map<String, dynamic>;
-  }
-
-  void _processUserAuthenticationError(Exception e) {
-    _errorController.sink.add(e);
-    _currentUserController.sink.add(null);
   }
 }
