@@ -92,7 +92,8 @@ class CraftCutsApp extends StatelessWidget {
                   RouteNames.homePage,
                   (_) => false,
                 );
-              } else {
+              } else if (authNotifier.signInStateViewModel.lastException ==
+                  null) {
                 navigator!.pushNamedAndRemoveUntil(
                   RouteNames.loginPage,
                   (_) => false,
