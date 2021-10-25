@@ -1,6 +1,6 @@
 import 'package:craft_cuts_mobile/common/presentation/app_bar/craft_cuts_app_bar.dart';
 import 'package:craft_cuts_mobile/common/presentation/strings/common_strings.dart';
-import 'package:craft_cuts_mobile/home/presentation/widgets/home_page_body.dart';
+import 'package:craft_cuts_mobile/home/presentation/widgets/home_page_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -30,7 +30,9 @@ class _MainPageState extends State<MainPage> {
                 controller: _pageController,
                 physics: const NeverScrollableScrollPhysics(),
                 children: [
-                  HomePageBody(),
+                  HomePagePageView(
+                    pageController: _pageController,
+                  ),
                   Center(
                     child: const Text('hot'),
                   ),

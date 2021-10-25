@@ -55,8 +55,8 @@ class UserRepositoryImpl implements UserRepository {
   void _processSignInResponse(http.Response response) {
     if (response.statusCode == HttpStatus.ok) {
       _processSignInResponseOk(response);
-    } else if (response.statusCode == HttpStatus.notFound) {
-      _processStatusCode404NotFound(response);
+    } else if (response.statusCode == HttpStatus.badRequest) {
+      _processStatusCode400BadRequest(response);
     } else {
       throw AuthResponseException(response.statusCode.toString());
     }
@@ -65,8 +65,8 @@ class UserRepositoryImpl implements UserRepository {
   void _processRegisterResponse(http.Response response) {
     if (response.statusCode == HttpStatus.ok) {
       _processRegisterResponseOK(response);
-    } else if (response.statusCode == HttpStatus.notFound) {
-      _processStatusCode404NotFound(response);
+    } else if (response.statusCode == HttpStatus.badRequest) {
+      _processStatusCode400BadRequest(response);
     } else {
       throw AuthResponseException(response.statusCode.toString());
     }
@@ -84,9 +84,9 @@ class UserRepositoryImpl implements UserRepository {
     _currentUserController.sink.add(user);
   }
 
-  void _processStatusCode404NotFound(http.Response response) {
+  void _processStatusCode400BadRequest(http.Response response) {
     final bodyMap = _parseHttpResponse(response);
-    final parsedReason = bodyMap['title'];
+    final parsedReason = bodyMap['message'];
     throw AuthResponseException(parsedReason ?? response.statusCode.toString());
   }
 
