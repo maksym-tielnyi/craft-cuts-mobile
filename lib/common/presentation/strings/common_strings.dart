@@ -24,4 +24,7 @@ class CommonStrings {
 
   static const String ok = 'Ok';
   static const String search = 'Поиск';
+
+  static const String camera = 'Камера';
+  static const String gallery = 'Галлерея';
 }

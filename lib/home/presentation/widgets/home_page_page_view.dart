@@ -1,5 +1,5 @@
 import 'package:craft_cuts_mobile/common/presentation/strings/common_strings.dart';
-import 'package:craft_cuts_mobile/home/presentation/widgets/haircut_demo_page.dart';
+import 'package:craft_cuts_mobile/haircut_demo/presentation/widgets/haircut_demo_page.dart';
 import 'package:craft_cuts_mobile/home/presentation/widgets/home_page_main.dart';
 import 'package:flutter/material.dart';
 

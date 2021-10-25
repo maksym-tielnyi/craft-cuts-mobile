@@ -13,6 +13,7 @@ class UserRepositoryImpl implements UserRepository {
   static const _unencodedRegisterPath = 'api/Customer/Registration';
   static const _unencodedSignInPath = 'api/Customer/Auth';
 
+
   final _client = http.Client();
   final _currentUserController = StreamController<User?>();
 
