@@ -20,22 +20,24 @@ class _HaircutDemoWidgetState extends State<HaircutDemoWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        GestureDetector(
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) => SimpleDialog(
-                children: [
-                  GetPhotoWidget(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            );
-          },
-          child: Image.memory(widget.imageBytes),
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => SimpleDialog(
+                  children: [
+                    GetPhotoWidget(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
+            child: Image.memory(widget.imageBytes),
+          ),
         )
       ],
     );
