@@ -1,10 +1,10 @@
 import 'package:craft_cuts_mobile/auth/data/repositories/user_repository_impl.dart';
-import 'package:craft_cuts_mobile/auth/domain/repositories/user_repository.dart';
 import 'package:craft_cuts_mobile/auth/domain/usecases/register_user_usecase.dart';
 import 'package:craft_cuts_mobile/auth/domain/usecases/signin_usecase.dart';
 import 'package:craft_cuts_mobile/auth/presentation/state/auth_notifier.dart';
+import 'package:craft_cuts_mobile/haircut_demo/data/repositories/haircuts_repository_impl.dart';
 import 'package:craft_cuts_mobile/haircut_demo/data/repositories/model_photo_repository_impl.dart';
-import 'package:craft_cuts_mobile/haircut_demo/domain/repositories/model_photo_repository.dart';
+import 'package:craft_cuts_mobile/haircut_demo/domain/usecase/fetch_haircuts_usecase.dart';
 import 'package:craft_cuts_mobile/haircut_demo/domain/usecase/get_photo_from_camera_usecase.dart';
 import 'package:craft_cuts_mobile/haircut_demo/domain/usecase/get_photo_from_gallery_usecase.dart';
 import 'package:craft_cuts_mobile/haircut_demo/presentation/state/haircut_demo_notifier.dart';
@@ -29,11 +29,13 @@ class _InjectionContainerState extends State<InjectionContainer> {
 
   late GetPhotoFromGalleryUseCase _getPhotoFromGalleryUseCase;
   late GetPhotoFromCameraUseCase _getPhotoFromCameraUseCase;
+  late FetchHaircutsUseCase _fetchHaircutsUseCase;
 
   @override
   void initState() {
-    UserRepository userRepository = UserRepositoryImpl();
-    ModelPhotoRepository modelPhotoRepository = ModelPhotoRepositoryImpl();
+    final userRepository = UserRepositoryImpl();
+    final modelPhotoRepository = ModelPhotoRepositoryImpl();
+    final haircutsRepository = HaircutsRepositoryImpl();
 
     _registerUserUsecase = RegisterUserUsecase(userRepository);
     _signInUsecase = SignInUsecase(userRepository);
@@ -47,12 +49,15 @@ class _InjectionContainerState extends State<InjectionContainer> {
         GetPhotoFromCameraUseCase(modelPhotoRepository);
     _getPhotoFromGalleryUseCase =
         GetPhotoFromGalleryUseCase(modelPhotoRepository);
+    _fetchHaircutsUseCase = FetchHaircutsUseCase(haircutsRepository);
     _haircutDemoNotifier = HaircutDemoNotifier(
       _getPhotoFromCameraUseCase,
       _getPhotoFromGalleryUseCase,
+      _fetchHaircutsUseCase,
     );
     _haircutDemoNotifier
         .subscribeToModelPhoto(modelPhotoRepository.photoStream);
+    _haircutDemoNotifier.subscribeToHaircuts(haircutsRepository.haircutStream);
 
     super.initState();
   }

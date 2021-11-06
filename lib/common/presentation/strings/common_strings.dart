@@ -27,4 +27,6 @@ class CommonStrings {
 
   static const String camera = 'Камера';
   static const String gallery = 'Галлерея';
+
+  static const String empty = 'Пусто';
 }
