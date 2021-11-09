@@ -13,7 +13,6 @@ class UserRepositoryImpl implements UserRepository {
   static const _unencodedRegisterPath = 'api/Customer/Registration';
   static const _unencodedSignInPath = 'api/Customer/Auth';
 
-
   final _client = http.Client();
   final _currentUserController = StreamController<User?>();
 
@@ -21,13 +20,14 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   void registerUser(User userData) async {
-    final requestUri = Uri.https(_apiEndpoint, _unencodedRegisterPath);
-    final bodyJson = userData.toMap();
-
-    final response = await _client.post(
-      requestUri,
-      body: bodyJson,
+    final queryParams = userData.toMap();
+    final requestUri = Uri.https(
+      _apiEndpoint,
+      _unencodedRegisterPath,
+      queryParams,
     );
+
+    final response = await _client.post(requestUri);
     _processRegisterResponse(response);
   }
 
@@ -56,20 +56,16 @@ class UserRepositoryImpl implements UserRepository {
   void _processSignInResponse(http.Response response) {
     if (response.statusCode == HttpStatus.ok) {
       _processSignInResponseOk(response);
-    } else if (response.statusCode == HttpStatus.badRequest) {
-      _processStatusCode400BadRequest(response);
     } else {
-      throw AuthResponseException(response.statusCode.toString());
+      _processStatusCodeFailed(response);
     }
   }
 
   void _processRegisterResponse(http.Response response) {
     if (response.statusCode == HttpStatus.ok) {
       _processRegisterResponseOK(response);
-    } else if (response.statusCode == HttpStatus.badRequest) {
-      _processStatusCode400BadRequest(response);
     } else {
-      throw AuthResponseException(response.statusCode.toString());
+      _processStatusCodeFailed(response);
     }
   }
 
@@ -85,7 +81,7 @@ class UserRepositoryImpl implements UserRepository {
     _currentUserController.sink.add(user);
   }
 
-  void _processStatusCode400BadRequest(http.Response response) {
+  void _processStatusCodeFailed(http.Response response) {
     final bodyMap = _parseHttpResponse(response);
     final parsedReason = bodyMap['message'];
     throw AuthResponseException(parsedReason ?? response.statusCode.toString());

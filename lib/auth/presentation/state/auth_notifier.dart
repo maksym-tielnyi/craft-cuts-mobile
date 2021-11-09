@@ -36,6 +36,7 @@ class AuthNotifier extends ChangeNotifier {
     String password,
     String name,
     String phone,
+    DateTime birthday,
     bool agreedToReceiveNews,
   ) async {
     _handleAuthError(null);
@@ -44,7 +45,7 @@ class AuthNotifier extends ChangeNotifier {
     try {
       await _registerUserUsecase(
         RegisterUserParam(
-          User(null, email, name, password, phone),
+          User(null, email, name, password, phone, birthday),
         ),
       );
     } on AuthResponseException catch (e) {
@@ -95,6 +96,7 @@ class AuthNotifier extends ChangeNotifier {
   }
 
   void _handleAuthError(Exception? exception) {
+    print(exception.toString());
     _signInStateViewModel = SignInStateViewModel(exception);
   }
 
