@@ -18,14 +18,14 @@ class GetPhotoWidget extends StatelessWidget {
           IconButton(
             onPressed: () {
               haircutDemoNotifier.getModelPhotoFromGallery();
-              onPressed!();
+              if (onPressed != null) onPressed!();
             },
             icon: Icon(Icons.image),
           ),
           IconButton(
             onPressed: () {
               haircutDemoNotifier.getModelPhotoFromCamera();
-              onPressed!();
+              if (onPressed != null) onPressed!();
             },
             icon: Icon(Icons.camera_alt),
           ),

@@ -23,6 +23,6 @@ class _HaircutDemoPage extends State<HaircutDemoPage> {
         ],
       );
     }
-    return HaircutDemoWidget(photoBytes);
+    return HaircutDemoWidget();
   }
 }

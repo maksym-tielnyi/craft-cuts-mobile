@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:craft_cuts_mobile/common/presentation/strings/common_strings.dart';
 import 'package:craft_cuts_mobile/haircut_demo/presentation/state/haircut_demo_notifier.dart';
@@ -8,10 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HaircutDemoWidget extends StatefulWidget {
-  final Uint8List imageBytes;
-
-  const HaircutDemoWidget(
-    this.imageBytes, {
+  const HaircutDemoWidget({
     Key? key,
   }) : super(key: key);
 
@@ -22,6 +17,7 @@ class HaircutDemoWidget extends StatefulWidget {
 class _HaircutDemoWidgetState extends State<HaircutDemoWidget> {
   late HaircutDemoNotifier _haircutDemoNotifier;
   bool _isHaircutsInitialized = false;
+  int? _selectedHaircutIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +52,8 @@ class _HaircutDemoWidgetState extends State<HaircutDemoWidget> {
                 ),
               );
             },
-            child: Image.memory(widget.imageBytes),
+            child: Image.memory(
+                _haircutDemoNotifier.modelPhotoViewModel.photoBytes!),
           ),
         ),
         SizedBox(
@@ -73,7 +70,13 @@ class _HaircutDemoWidgetState extends State<HaircutDemoWidget> {
               return Image.network(
                   'https://www.pinclipart.com/picdir/middle/18-181421_png-transparent-download-person-svg-png-icon-person.png');
             },
-            options: CarouselOptions(),
+            options: CarouselOptions(
+              onPageChanged: (index, _) {
+                setState(() {
+                  _selectedHaircutIndex = index;
+                });
+              }
+            ),
           ),
         ),
       ],

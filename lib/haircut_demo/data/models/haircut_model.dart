@@ -1,23 +1,17 @@
+import 'dart:typed_data';
+
 class HaircutModel {
   final int? id;
-  final String imageName;
+  final Uint8List imageBytes;
   final String displayedName;
 
-  HaircutModel(this.id, this.imageName, this.displayedName);
+  HaircutModel(this.id, this.imageBytes, this.displayedName);
 
   factory HaircutModel.fromJson(Map<String, dynamic> json) => HaircutModel(
         json[_JsonFields.id],
         json[_JsonFields.imageName],
         json[_JsonFields.displayedName],
       );
-
-  Map<String, String> toMap() {
-    return {
-      _JsonFields.id: id.toString(),
-      _JsonFields.imageName: imageName,
-      _JsonFields.displayedName: displayedName,
-    };
-  }
 }
 
 class _JsonFields {

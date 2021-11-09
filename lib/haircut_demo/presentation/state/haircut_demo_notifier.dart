@@ -6,7 +6,9 @@ import 'package:craft_cuts_mobile/haircut_demo/domain/usecase/get_photo_from_cam
 import 'package:craft_cuts_mobile/haircut_demo/domain/usecase/get_photo_from_gallery_usecase.dart';
 import 'package:craft_cuts_mobile/haircut_demo/presentation/viewmodels/haircuts_viewmodel.dart';
 import 'package:craft_cuts_mobile/haircut_demo/presentation/viewmodels/model_photo_viewmodel.dart';
+import 'package:craft_cuts_mobile/haircut_demo/util/image_utils.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class HaircutDemoNotifier extends ChangeNotifier {
@@ -17,7 +19,7 @@ class HaircutDemoNotifier extends ChangeNotifier {
   StreamSubscription? _modelPhotoSubscription;
   StreamSubscription? _haircutsSubscription;
 
-  var _modelPhotoViewModel = ModelPhotoViewModel(null);
+  var _modelPhotoViewModel = ModelPhotoViewModel();
   var _haircutsViewModel = HaircutsViewModel(null);
 
   ModelPhotoViewModel get modelPhotoViewModel => _modelPhotoViewModel;
@@ -52,10 +54,12 @@ class HaircutDemoNotifier extends ChangeNotifier {
 
   void _modelPhotoListener(XFile? photo) async {
     if (photo == null) {
-      _modelPhotoViewModel = ModelPhotoViewModel(null);
+      _modelPhotoViewModel = ModelPhotoViewModel();
     } else {
       final photoBytes = await photo.readAsBytes();
-      _modelPhotoViewModel = ModelPhotoViewModel(photoBytes);
+      _modelPhotoViewModel = ModelPhotoViewModel(photoBytes: photoBytes);
+      final faceCoordinates = await ImageUtils.findFaceCoordinates(photoBytes);
+      print(faceCoordinates.length);
     }
     notifyListeners();
   }
