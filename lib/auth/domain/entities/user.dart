@@ -16,7 +16,7 @@ class User {
       json[_JsonFields.name],
       json[_JsonFields.password],
       json[_JsonFields.phone],
-      json[_JsonFields.birthday],
+      DateTime.parse(json[_JsonFields.birthday]),
     );
   }
 
