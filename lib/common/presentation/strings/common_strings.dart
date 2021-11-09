@@ -5,6 +5,8 @@ class CommonStrings {
   static const String name = 'Имя';
   static const String email = 'Почта';
   static const String password = 'Пароль';
+  static const String phoneNumber = 'Phone number';
+  static const String birthday = 'Birthday';
   static const String show = 'Показать';
   static const String hide = 'Спрятать';
   static const String receiveNewsAndNotificationsAgreement =

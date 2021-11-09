@@ -1,8 +1,12 @@
+import 'package:craft_cuts_mobile/auth/config/register_config.dart';
 import 'package:craft_cuts_mobile/auth/presentation/state/auth_notifier.dart';
 import 'package:craft_cuts_mobile/common/presentation/loading_indicator_overlay/widgets/loading_indicator_overlay.dart';
 import 'package:craft_cuts_mobile/common/presentation/navigation/route_names.dart';
 import 'package:craft_cuts_mobile/common/presentation/strings/common_strings.dart';
+import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -15,24 +19,38 @@ class _RegisterPageState extends State<RegisterPage> {
   final _nameFieldController = TextEditingController();
   final _emailFieldController = TextEditingController();
   final _passwordFieldController = TextEditingController();
+  final _phoneFieldController = TextEditingController();
+  final _phoneFieldFormatter = PhoneInputFormatter();
+  DateTime? _birthdayInput;
   bool _passwordVisible = false;
   bool _receiveNewsEnabled = true;
 
   bool get _enableRegisterButton =>
       _nameFieldController.text.isNotEmpty &&
       _emailFieldController.text.isNotEmpty &&
-      _passwordFieldController.text.isNotEmpty;
+      _passwordFieldController.text.isNotEmpty &&
+      _phoneFieldFormatter.isFilled &&
+      _birthdayInput != null;
 
   @override
   void initState() {
     _nameFieldController.addListener(_inputFieldValueChangeListener);
     _emailFieldController.addListener(_inputFieldValueChangeListener);
     _passwordFieldController.addListener(_inputFieldValueChangeListener);
+    _phoneFieldController.addListener(_inputFieldValueChangeListener);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    const int daysInYear = 365;
+    final now = DateTime.now();
+    final minRegisterBirthDateTime = now.subtract(
+      Duration(days: RegisterConfig.maxRegisterAgeYears * daysInYear),
+    );
+    final maxRegisterBirthDateTime = now.subtract(
+      Duration(days: RegisterConfig.minRegisterAgeYears * daysInYear),
+    );
     final authNotifier = Provider.of<AuthNotifier>(context);
 
     const inputFieldsPadding = EdgeInsets.symmetric(
@@ -116,6 +134,29 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ),
                       ),
+                      Padding(
+                        padding: inputFieldsPadding,
+                        child: TextFormField(
+                          controller: _phoneFieldController,
+                          inputFormatters: [_phoneFieldFormatter],
+                          decoration: InputDecoration(
+                            hintText: CommonStrings.phoneNumber,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: inputFieldsPadding,
+                        child: DateTimeFormField(
+                          firstDate: minRegisterBirthDateTime,
+                          lastDate: maxRegisterBirthDateTime,
+                          mode: DateTimeFieldPickerMode.date,
+                          validator: _birthdayFieldValidator,
+                          onDateSelected: _onBirthdayFieldChanged,
+                          decoration: InputDecoration(
+                            hintText: CommonStrings.birthday,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -179,7 +220,8 @@ class _RegisterPageState extends State<RegisterPage> {
         _emailFieldController.text,
         _passwordFieldController.text,
         _nameFieldController.text,
-        '',
+        _phoneFieldController.text,
+        _birthdayInput!,
         _receiveNewsEnabled,
       );
     }
@@ -195,7 +237,19 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
+  String? _birthdayFieldValidator(DateTime? value) {
+    if (_birthdayInput == null) {
+      return CommonStrings.emptyInputFieldMessage;
+    }
+  }
+
   void _inputFieldValueChangeListener() {
     setState(() {});
+  }
+
+  void _onBirthdayFieldChanged(DateTime date) {
+    setState(() {
+      _birthdayInput = date;
+    });
   }
 }
