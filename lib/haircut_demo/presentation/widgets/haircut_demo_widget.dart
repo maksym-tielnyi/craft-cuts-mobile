@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:craft_cuts_mobile/common/presentation/strings/common_strings.dart';
 import 'package:craft_cuts_mobile/haircut_demo/presentation/state/haircut_demo_notifier.dart';
@@ -52,8 +54,9 @@ class _HaircutDemoWidgetState extends State<HaircutDemoWidget> {
                 ),
               );
             },
-            child: Image.memory(
-                _haircutDemoNotifier.modelPhotoViewModel.photoBytes!),
+            child: Image.file(
+              File(_haircutDemoNotifier.modelPhotoViewModel.photoBytes!.path),
+            ),
           ),
         ),
         SizedBox(
@@ -70,13 +73,11 @@ class _HaircutDemoWidgetState extends State<HaircutDemoWidget> {
               return Image.network(
                   'https://www.pinclipart.com/picdir/middle/18-181421_png-transparent-download-person-svg-png-icon-person.png');
             },
-            options: CarouselOptions(
-              onPageChanged: (index, _) {
-                setState(() {
-                  _selectedHaircutIndex = index;
-                });
-              }
-            ),
+            options: CarouselOptions(onPageChanged: (index, _) {
+              setState(() {
+                _selectedHaircutIndex = index;
+              });
+            }),
           ),
         ),
       ],

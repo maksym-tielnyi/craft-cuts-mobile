@@ -1,7 +1,7 @@
-import 'dart:typed_data';
+import 'package:image_picker/image_picker.dart';
 
 class ModelPhotoViewModel {
-  final Uint8List? photoBytes;
+  final XFile? photoBytes;
 
   ModelPhotoViewModel({this.photoBytes});
 }

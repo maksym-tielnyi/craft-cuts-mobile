@@ -56,9 +56,8 @@ class HaircutDemoNotifier extends ChangeNotifier {
     if (photo == null) {
       _modelPhotoViewModel = ModelPhotoViewModel();
     } else {
-      final photoBytes = await photo.readAsBytes();
-      _modelPhotoViewModel = ModelPhotoViewModel(photoBytes: photoBytes);
-      final faceCoordinates = await ImageUtils.findFaceCoordinates(photoBytes);
+      _modelPhotoViewModel = ModelPhotoViewModel(photoBytes: photo);
+      final faceCoordinates = await ImageUtils.findFaceCoordinates(photo);
       print(faceCoordinates.length);
     }
     notifyListeners();
