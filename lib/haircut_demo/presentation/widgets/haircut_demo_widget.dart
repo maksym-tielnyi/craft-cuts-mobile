@@ -70,8 +70,8 @@ class _HaircutDemoWidgetState extends State<HaircutDemoWidget> {
                   child: Text(CommonStrings.empty),
                 );
               }
-              return Image.network(
-                  'https://www.pinclipart.com/picdir/middle/18-181421_png-transparent-download-person-svg-png-icon-person.png');
+              return Image.asset(
+                  'assets/images/haircuts/${haircuts![index].imageName}.png');
             },
             options: CarouselOptions(onPageChanged: (index, _) {
               setState(() {

@@ -1,17 +1,31 @@
-import 'dart:typed_data';
+import 'dart:convert';
 
 class HaircutModel {
   final int? id;
-  final Uint8List imageBytes;
+  final String imageName;
   final String displayedName;
 
-  HaircutModel(this.id, this.imageBytes, this.displayedName);
+  HaircutModel(this.id, this.imageName, this.displayedName);
 
   factory HaircutModel.fromJson(Map<String, dynamic> json) => HaircutModel(
         json[_JsonFields.id],
         json[_JsonFields.imageName],
         json[_JsonFields.displayedName],
       );
+
+  static List<HaircutModel> fromJsonList(String json) {
+    final jsonList = jsonDecode(json) as List<dynamic>;
+    final haircuts = jsonList
+        .map(
+          (row) => HaircutModel(
+            row[_JsonFields.id] as int?,
+            row[_JsonFields.imageName],
+            row[_JsonFields.displayedName],
+          ),
+        )
+        .toList();
+    return haircuts;
+  }
 }
 
 class _JsonFields {

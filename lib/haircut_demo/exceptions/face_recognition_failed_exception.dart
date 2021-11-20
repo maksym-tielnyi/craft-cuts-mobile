@@ -1,0 +1,1 @@
+class FaceRecognitionFailed implements Exception {}
