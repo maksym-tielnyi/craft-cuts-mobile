@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 
 class UserRepositoryImpl implements UserRepository {
   static const _unencodedRegisterPath = 'api/Customer/Registration';
-  static const _unencodedSignInPath = 'api/Customer/Auth';
+  static const _unencodedSignInPath = 'api/Customer/AuthMobile';
 
   final _client = http.Client();
   final _currentUserController = StreamController<User?>();
@@ -28,14 +28,14 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   void signInWithEmailAndPassword(String email, String password) async {
-    final requestBody = {
+    final params = {
       'email': email,
       'password': password,
     };
 
-    final requestUri = Uri.https(Api.baseUrl, _unencodedSignInPath);
+    final requestUri = Uri.https(Api.baseUrl, _unencodedSignInPath, params);
 
-    final response = await _client.post(requestUri, body: requestBody);
+    final response = await _client.post(requestUri);
     _processSignInResponse(response);
   }
 
