@@ -66,6 +66,12 @@ flutter:
     - assets/icons/profile.svg
     - assets/icons/notification.svg
 
+    - assets/images/haircuts/haircut1.png
+    - assets/images/haircuts/haircut2.png
+    - assets/images/haircuts/haircut3.png
+    - assets/images/haircuts/haircut4.png
+    - assets/images/haircuts/haircut5.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

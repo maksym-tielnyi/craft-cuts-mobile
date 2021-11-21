@@ -3,14 +3,14 @@ import 'dart:convert';
 class HaircutModel {
   final int? id;
   final String imageName;
-  final String displayedName;
+  final String? displayedName;
 
   HaircutModel(this.id, this.imageName, this.displayedName);
 
   factory HaircutModel.fromJson(Map<String, dynamic> json) => HaircutModel(
         json[_JsonFields.id],
         json[_JsonFields.imageName],
-        json[_JsonFields.displayedName],
+        json[_JsonFields.displayedName] as String?,
       );
 
   static List<HaircutModel> fromJsonList(String json) {
@@ -20,7 +20,7 @@ class HaircutModel {
           (row) => HaircutModel(
             row[_JsonFields.id] as int?,
             row[_JsonFields.imageName],
-            row[_JsonFields.displayedName],
+            row[_JsonFields.displayedName] as String?,
           ),
         )
         .toList();

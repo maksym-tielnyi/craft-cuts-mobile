@@ -220,7 +220,7 @@ class _RegisterPageState extends State<RegisterPage> {
         _emailFieldController.text,
         _passwordFieldController.text,
         _nameFieldController.text,
-        _phoneFieldController.text,
+        _phoneFieldFormatter.unmasked,
         _birthdayInput!,
         _receiveNewsEnabled,
       );

@@ -2,13 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:craft_cuts_mobile/common/config/api_config.dart';
 import 'package:craft_cuts_mobile/haircut_demo/data/models/haircut_model.dart';
 import 'package:craft_cuts_mobile/haircut_demo/domain/repositories/haircuts_repository.dart';
 import 'package:http/http.dart' as http;
 
 class HaircutsRepositoryImpl implements HaircutsRepository {
-  static const _apiEndpoint =
-      'craftcutstestapiproject20211011184405.azurewebsites.net';
   static const _unencodedHaircutsPath = 'api/Haircut';
 
   final _client = http.Client();
@@ -17,7 +16,7 @@ class HaircutsRepositoryImpl implements HaircutsRepository {
   @override
   Future<void> fetchHaircuts() async {
     final requestUri = Uri.https(
-      _apiEndpoint,
+      Api.baseUrl,
       _unencodedHaircutsPath,
     );
 

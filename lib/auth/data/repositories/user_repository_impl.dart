@@ -5,11 +5,10 @@ import 'dart:io';
 import 'package:craft_cuts_mobile/auth/domain/entities/user.dart';
 import 'package:craft_cuts_mobile/auth/domain/repositories/exceptions/auth_response_exception.dart';
 import 'package:craft_cuts_mobile/auth/domain/repositories/user_repository.dart';
+import 'package:craft_cuts_mobile/common/config/api_config.dart';
 import 'package:http/http.dart' as http;
 
 class UserRepositoryImpl implements UserRepository {
-  static const _apiEndpoint =
-      'craftcutstestapiproject20211011184405.azurewebsites.net';
   static const _unencodedRegisterPath = 'api/Customer/Registration';
   static const _unencodedSignInPath = 'api/Customer/Auth';
 
@@ -20,31 +19,23 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   void registerUser(User userData) async {
-    final queryParams = userData.toMap();
-    final requestUri = Uri.https(
-      _apiEndpoint,
-      _unencodedRegisterPath,
-      queryParams,
-    );
+    final requestBody = userData.toMap();
+    final requestUri = Uri.https(Api.baseUrl, _unencodedRegisterPath);
 
-    final response = await _client.post(requestUri);
+    final response = await _client.post(requestUri, body: requestBody);
     _processRegisterResponse(response);
   }
 
   @override
   void signInWithEmailAndPassword(String email, String password) async {
-    final queryParams = {
+    final requestBody = {
       'email': email,
       'password': password,
     };
 
-    final requestUri = Uri.https(
-      _apiEndpoint,
-      _unencodedSignInPath,
-      queryParams,
-    );
+    final requestUri = Uri.https(Api.baseUrl, _unencodedSignInPath);
 
-    final response = await _client.post(requestUri);
+    final response = await _client.post(requestUri, body: requestBody);
     _processSignInResponse(response);
   }
 
