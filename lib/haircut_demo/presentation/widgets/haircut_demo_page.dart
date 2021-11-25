@@ -6,6 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HaircutDemoPage extends StatefulWidget {
+  final VoidCallback? returnCallback;
+
+  const HaircutDemoPage({Key? key, this.returnCallback}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _HaircutDemoPage();
 }
@@ -32,6 +36,13 @@ class _HaircutDemoPage extends State<HaircutDemoPage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: widget.returnCallback,
+        ),
         title: Text(CommonStrings.onlineHaircut),
       ),
       body: body,
