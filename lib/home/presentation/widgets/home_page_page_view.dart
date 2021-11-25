@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 class HomePagePageView extends StatefulWidget {
   final PageController pageController;
+
   const HomePagePageView({
     Key? key,
     required this.pageController,
@@ -26,7 +27,6 @@ class HomePagePageView extends StatefulWidget {
 }
 
 class _HomePageBody extends State<HomePagePageView> {
-  static const int _mainPageIndex = 0;
   static const int _haircutDemoPageIndex = 1;
 
   final _pageController = PageController();

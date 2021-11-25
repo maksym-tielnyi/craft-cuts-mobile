@@ -13,7 +13,7 @@ class _HaircutDemoPage extends State<HaircutDemoPage> {
   @override
   Widget build(BuildContext context) {
     final haircutDemoNotifier = Provider.of<HaircutDemoNotifier>(context);
-    final photoBytes = haircutDemoNotifier.modelPhotoViewModel.photoBytes;
+    final photoBytes = haircutDemoNotifier.modelPhotoViewModel.image;
 
     if (photoBytes == null) {
       return Column(
