@@ -39,8 +39,29 @@ class CraftCutsApp extends StatelessWidget {
 
             // Used in page titles
             headline2: GoogleFonts.inter(
+              fontSize: 26.0,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+
+            // Used in page subtitles
+            headline3: GoogleFonts.inter(
               fontSize: 22.0,
               fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+
+            // Used in page subtitles subtitles
+            headline4: GoogleFonts.inter(
+              fontSize: 17.0,
+              fontWeight: FontWeight.w500,
+              color: Color(0xFF565656),
+            ),
+
+            // Used on some buttons
+            headline5: GoogleFonts.inter(
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
               color: Colors.black,
             ),
           ),

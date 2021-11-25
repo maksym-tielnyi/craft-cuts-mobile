@@ -71,6 +71,8 @@ flutter:
     - assets/images/haircuts/haircut3.png
     - assets/images/haircuts/haircut4.png
     - assets/images/haircuts/haircut5.png
+    - assets/images/booking/masters.svg
+    - assets/images/booking/services.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
