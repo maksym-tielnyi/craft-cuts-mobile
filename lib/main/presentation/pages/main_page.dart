@@ -1,4 +1,3 @@
-import 'package:craft_cuts_mobile/common/presentation/app_bar/craft_cuts_app_bar.dart';
 import 'package:craft_cuts_mobile/common/presentation/strings/common_strings.dart';
 import 'package:craft_cuts_mobile/home/presentation/widgets/home_page_page_view.dart';
 import 'package:flutter/material.dart';
@@ -22,27 +21,26 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
+        child: PageView(
+          controller: _pageController,
+          physics: const NeverScrollableScrollPhysics(),
           children: [
-            CraftCutsAppBar(title: _currentAppBarTitle),
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  HomePagePageView(
-                    pageController: _pageController,
-                  ),
-                  Center(
-                    child: const Text('hot'),
-                  ),
-                  Center(
-                    child: const Text('calendar'),
-                  ),
-                  Center(
-                    child: const Text('profile'),
-                  ),
-                ],
+            HomePagePageView(
+              pageController: _pageController,
+            ),
+            Scaffold(
+              appBar: AppBar(
+                title: Text(CommonStrings.services),
+              ),
+            ),
+            Scaffold(
+              appBar: AppBar(
+                title: Text(CommonStrings.book),
+              ),
+            ),
+            Scaffold(
+              appBar: AppBar(
+                title: Text(CommonStrings.profile),
               ),
             ),
           ],
@@ -97,20 +95,5 @@ class _MainPageState extends State<MainPage> {
       duration: const Duration(milliseconds: 300),
       curve: Curves.ease,
     );
-  }
-
-  String get _currentAppBarTitle {
-    switch (_currentPageIndex) {
-      case _homePageIndex:
-        return CommonStrings.home;
-      case _servicesPageIndex:
-        return CommonStrings.services;
-      case _mastersPageIndex:
-        return CommonStrings.masters;
-      case _profilePageIndex:
-        return CommonStrings.profile;
-      default:
-        return '';
-    }
   }
 }

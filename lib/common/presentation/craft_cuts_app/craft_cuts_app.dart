@@ -18,6 +18,17 @@ class CraftCutsApp extends StatelessWidget {
       child: MaterialApp(
         theme: ThemeData(
           primaryColor: Color(0xFFB02222),
+          backgroundColor: Colors.white,
+          appBarTheme: AppBarTheme(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            centerTitle: true,
+            titleTextStyle: GoogleFonts.inter(
+              fontSize: 22.0,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+          ),
           textTheme: TextTheme(
             // Used in login page app logo
             headline1: GoogleFonts.montserrat(
