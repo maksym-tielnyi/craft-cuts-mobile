@@ -2,6 +2,8 @@ import 'package:craft_cuts_mobile/booking/presentation/widgets/master_tile.dart'
 import 'package:craft_cuts_mobile/booking/presentation/widgets/service_tile.dart';
 import 'package:craft_cuts_mobile/common/presentation/strings/common_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 
 class BookingStepperPage extends StatefulWidget {
   final bool masterFirst;
@@ -136,6 +138,73 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
           ],
         ),
       ),
+      Step(
+        isActive: index == _BookingSteps.dateTime.index,
+        state: _getStepState(_BookingSteps.dateTime.index),
+        title: Container(
+          child: Text(
+            CommonStrings.selectDateAndTime,
+            style: Theme.of(context).textTheme.headline4,
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SvgPicture.asset(
+                    'assets/icons/date.svg',
+                    color: Colors.red,
+                  ),
+                  Expanded(
+                    child: SizedBox(
+                      height: 50.0,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 4,
+                        itemBuilder: (_, index) {
+                          final format = DateFormat.yMd('ru');
+
+                          return GestureDetector(
+                            child: Padding(
+                              padding: EdgeInsetsDirectional.all(5.0),
+                              child: Text(
+                                format
+                                    .format(DateUtils.dateOnly(DateTime.now())),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              children: [
+                Text(
+                  CommonStrings.time,
+                  style: Theme.of(context).textTheme.headline4,
+                ),
+              ],
+            ),
+            Flexible(
+              child: ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: 5,
+                itemBuilder: (_, index) {
+                  return MasterTile();
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     ];
   }
 
@@ -152,4 +221,5 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
 enum _BookingSteps {
   masters,
   service,
+  dateTime,
 }

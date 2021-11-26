@@ -33,4 +33,6 @@ class CommonStrings {
   static const String haircut = 'Стрижка';
   static const String painting = 'Покраска';
   static const String beard = 'Борода';
+  static const String selectDateAndTime = 'Выберите удобное время и дату';
+  static const String time = 'Время';
 }
