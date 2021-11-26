@@ -30,4 +30,7 @@ class CommonStrings {
   static const String chooseSpecialist = 'Выберите специалиста';
   static const String onlineBooking = 'Онлайн запись';
   static const String chooseVariant = 'Выберите нужный вариант';
+  static const String haircut = 'Стрижка';
+  static const String painting = 'Покраска';
+  static const String beard = 'Борода';
 }

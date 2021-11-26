@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class BookingStartPage extends StatefulWidget {
+  final void Function(bool masterFirst)? navigateToStepperCallback;
+
+  const BookingStartPage({this.navigateToStepperCallback});
+
   @override
   State<StatefulWidget> createState() => _BookingStartPageState();
 }
@@ -10,23 +14,6 @@ class BookingStartPage extends StatefulWidget {
 class _BookingStartPageState extends State<BookingStartPage> {
   @override
   Widget build(BuildContext context) {
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     title: Text(CommonStrings.book),
-    //   ),
-    //   body: Stepper(
-    //     type: StepperType.horizontal,
-    //     steps: [
-    //       Step(
-    //         title: Text(CommonStrings.chooseSpecialist),
-    //         content: Column(
-    //
-    //         ),
-    //       )
-    //     ],
-    //   ),
-    // );
-
     final boxDecoration = BoxDecoration(
       color: Color(0xFFFFF9F1),
       borderRadius: BorderRadius.circular(10.0),
@@ -66,6 +53,11 @@ class _BookingStartPageState extends State<BookingStartPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   GestureDetector(
+                    onTap: () {
+                      if (widget.navigateToStepperCallback != null) {
+                        widget.navigateToStepperCallback!(true);
+                      }
+                    },
                     child: Container(
                       height: boxHeight,
                       decoration: boxDecoration,
@@ -85,6 +77,11 @@ class _BookingStartPageState extends State<BookingStartPage> {
                     ),
                   ),
                   GestureDetector(
+                    onTap: () {
+                      if (widget.navigateToStepperCallback != null) {
+                        widget.navigateToStepperCallback!(false);
+                      }
+                    },
                     child: Container(
                       height: boxHeight,
                       decoration: boxDecoration,

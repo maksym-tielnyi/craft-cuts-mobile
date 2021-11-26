@@ -21,29 +21,33 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: PageView(
-          controller: _pageController,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            HomePagePageView(
-              pageController: _pageController,
-            ),
-            Scaffold(
-              appBar: AppBar(
-                title: Text(CommonStrings.services),
+        child: SafeArea(
+          child: PageView(
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              HomePagePageView(
+                pageController: _pageController,
               ),
-            ),
-            BookingPagePageView(),
-            Scaffold(
-              appBar: AppBar(
-                title: Text(CommonStrings.profile),
+              Scaffold(
+                appBar: AppBar(
+                  title: Text(CommonStrings.services),
+                ),
               ),
-            ),
-          ],
+              BookingPagePageView(),
+              Scaffold(
+                appBar: AppBar(
+                  title: Text(CommonStrings.profile),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: _currentPageIndex,
         onTap: _onBottomNavigationBarTap,
         items: [
