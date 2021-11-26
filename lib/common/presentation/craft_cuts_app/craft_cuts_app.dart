@@ -117,22 +117,26 @@ class CraftCutsApp extends StatelessWidget {
           final navigator = _navigatorKey.currentState;
           final authNotifier =
               Provider.of<AuthNotifier>(context, listen: false);
-          authNotifier.addListener(() {
-            if (!authNotifier.isLoading) {
-              if (authNotifier.isLoggedIn) {
-                navigator!.pushNamedAndRemoveUntil(
-                  RouteNames.homePage,
-                  (_) => false,
-                );
-              } else if (authNotifier.signInStateViewModel.lastException ==
-                  null) {
-                navigator!.pushNamedAndRemoveUntil(
-                  RouteNames.loginPage,
-                  (_) => false,
-                );
+          authNotifier.addListener(
+            () {
+              if (!authNotifier.isLoading) {
+                if (authNotifier.isLoggedIn) {
+                  if (navigator == null) {
+                    WidgetsBinding.instance!.addPostFrameCallback(
+                      (_) {
+                        _navigateToRoute(RouteNames.homePage);
+                      },
+                    );
+                  } else {
+                    _navigateToRoute(RouteNames.homePage);
+                  }
+                } else if (authNotifier.signInStateViewModel.lastException ==
+                    null) {
+                  _navigateToRoute(RouteNames.loginPage);
+                }
               }
-            }
-          });
+            },
+          );
           return widget!;
         },
         routes: {
@@ -142,6 +146,13 @@ class CraftCutsApp extends StatelessWidget {
           RouteNames.homePage: (_) => MainPage(),
         },
       ),
+    );
+  }
+
+  void _navigateToRoute(String name) {
+    _navigatorKey.currentState?.pushNamedAndRemoveUntil(
+      name,
+      (_) => false,
     );
   }
 }

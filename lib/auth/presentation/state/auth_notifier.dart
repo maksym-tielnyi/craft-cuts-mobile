@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:craft_cuts_mobile/auth/data/models/stored_user_credentials.dart';
 import 'package:craft_cuts_mobile/auth/domain/entities/user.dart';
 import 'package:craft_cuts_mobile/auth/domain/repositories/exceptions/auth_response_exception.dart';
 import 'package:craft_cuts_mobile/auth/domain/usecases/params/register_user_param.dart';
@@ -7,6 +8,7 @@ import 'package:craft_cuts_mobile/auth/domain/usecases/params/signin_param.dart'
 import 'package:craft_cuts_mobile/auth/domain/usecases/register_user_usecase.dart';
 import 'package:craft_cuts_mobile/auth/domain/usecases/signin_usecase.dart';
 import 'package:craft_cuts_mobile/auth/presentation/view_models/sign_in_state_viewmodel.dart';
+import 'package:craft_cuts_mobile/auth/util/auth_credentials_storage.dart';
 import 'package:flutter/cupertino.dart';
 
 class AuthNotifier extends ChangeNotifier {
@@ -14,7 +16,7 @@ class AuthNotifier extends ChangeNotifier {
   final SignInUsecase _signInUsecase;
 
   User? _user;
-  bool _isLoading = false;
+  bool _isLoading = true;
 
   late StreamSubscription _userSubscription;
 
@@ -39,6 +41,7 @@ class AuthNotifier extends ChangeNotifier {
     DateTime birthday,
     bool agreedToReceiveNews,
   ) async {
+    if (_isLoading) return;
     _handleAuthError(null);
     _changeLoadingState(true);
 
@@ -59,6 +62,7 @@ class AuthNotifier extends ChangeNotifier {
     String email,
     String password,
   ) async {
+    if (_isLoading) return;
     _handleAuthError(null);
     _changeLoadingState(true);
 
@@ -78,8 +82,23 @@ class AuthNotifier extends ChangeNotifier {
     _changeLoadingState(false);
   }
 
-  void subscribeToAuthUpdates(Stream<User?> userStream) {
+  Future<void> subscribeToAuthUpdates(Stream<User?> userStream) async {
     _userSubscription = userStream.listen(_userStreamListener);
+    await _trySignInWithStoredCredentials();
+  }
+
+  Future<void> _trySignInWithStoredCredentials() async {
+    final credentialsStorage = AuthCredentialsStorage();
+    StoredUserCredentials savedCredentials;
+    try {
+      savedCredentials = await credentialsStorage.savedCredentials;
+      if (savedCredentials.isValid) {
+        _signInUsecase(
+            SignInParam(savedCredentials.login!, savedCredentials.password!));
+      }
+    } finally {
+      _changeLoadingState(false);
+    }
   }
 
   void _changeLoadingState(bool isLoading) {
@@ -87,10 +106,12 @@ class AuthNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _userStreamListener(User? user) {
+  Future<void> _userStreamListener(User? user) async {
     _user = user;
     if (user != null) {
       _handleAuthError(null);
+      AuthCredentialsStorage()
+          .saveCredentials(StoredUserCredentials(user.email, user.password));
     }
     notifyListeners();
   }
