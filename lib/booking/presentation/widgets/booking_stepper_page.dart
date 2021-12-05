@@ -1,17 +1,26 @@
+import 'package:craft_cuts_mobile/booking/presentation/state/booking_notifier.dart';
 import 'package:craft_cuts_mobile/booking/presentation/widgets/master_tile.dart';
 import 'package:craft_cuts_mobile/booking/presentation/widgets/service_tile.dart';
+import 'package:craft_cuts_mobile/common/presentation/loading_indicator_overlay/widgets/loading_indicator_overlay.dart';
 import 'package:craft_cuts_mobile/common/presentation/strings/common_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class BookingStepperPage extends StatefulWidget {
   final bool masterFirst;
   final VoidCallback? navigateBackCallback;
+  final VoidCallback? onBookingApproved;
+  final VoidCallback? onBookingError;
 
-  const BookingStepperPage(
-      {Key? key, this.masterFirst = false, this.navigateBackCallback})
-      : super(key: key);
+  const BookingStepperPage({
+    Key? key,
+    this.masterFirst = false,
+    this.navigateBackCallback,
+    this.onBookingApproved,
+    this.onBookingError,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _BookingStepperPageState();
@@ -20,45 +29,62 @@ class BookingStepperPage extends StatefulWidget {
 class _BookingStepperPageState extends State<BookingStepperPage> {
   int _currentStep = 0;
 
+  BookingNotifier get _bookingNotifier =>
+      Provider.of<BookingNotifier>(context, listen: false);
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(CommonStrings.book),
-      ),
-      body: Stepper(
-        type: StepperType.horizontal,
-        currentStep: _currentStep,
-        onStepContinue: () {
-          setState(() {
-            _currentStep++;
-          });
-        },
-        onStepCancel: () {
-          setState(() {
-            _currentStep--;
-          });
-        },
-        controlsBuilder: (
-          BuildContext context, {
-          VoidCallback? onStepContinue,
-          VoidCallback? onStepCancel,
-        }) {
-          return Row(
-            children: [
-              TextButton(
-                onPressed: onStepContinue,
-                child: const Text('Продолжить'),
-              ),
-              if (_currentStep != 0)
+    final _bookingNotifier = Provider.of<BookingNotifier>(context);
+
+    return LoadingIndicatorOverlay(
+      isLoading: _bookingNotifier.isLoading,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(CommonStrings.book),
+        ),
+        body: Stepper(
+          type: StepperType.horizontal,
+          currentStep: _currentStep,
+          onStepContinue: () async {
+            if (_currentStep == _BookingSteps.dateTime.index) {
+              await _bookingNotifier.confirmBooking();
+            } else {
+              setState(() {
+                _currentStep++;
+              });
+            }
+          },
+          onStepCancel: () {
+            setState(() {
+              _currentStep--;
+            });
+          },
+          controlsBuilder: (
+            BuildContext context, {
+            VoidCallback? onStepContinue,
+            VoidCallback? onStepCancel,
+          }) {
+            return Row(
+              children: [
                 TextButton(
-                  onPressed: onStepCancel,
-                  child: const Text('Назад'),
+                  onPressed: onStepContinue,
+                  child: const Text('Продолжить'),
                 ),
-            ],
-          );
-        },
-        steps: _buildSteps(_currentStep),
+                if (_currentStep != 0)
+                  TextButton(
+                    onPressed: onStepCancel,
+                    child: const Text('Назад'),
+                  ),
+              ],
+            );
+          },
+          steps: _buildSteps(_currentStep),
+        ),
       ),
     );
   }
@@ -215,6 +241,11 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
       return StepState.indexed;
     }
     return StepState.editing;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
 

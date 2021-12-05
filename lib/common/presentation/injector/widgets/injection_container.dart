@@ -2,6 +2,7 @@ import 'package:craft_cuts_mobile/auth/data/repositories/user_repository_impl.da
 import 'package:craft_cuts_mobile/auth/domain/usecases/register_user_usecase.dart';
 import 'package:craft_cuts_mobile/auth/domain/usecases/signin_usecase.dart';
 import 'package:craft_cuts_mobile/auth/presentation/state/auth_notifier.dart';
+import 'package:craft_cuts_mobile/booking/presentation/state/booking_notifier.dart';
 import 'package:craft_cuts_mobile/haircut_demo/data/repositories/haircuts_repository_impl.dart';
 import 'package:craft_cuts_mobile/haircut_demo/data/repositories/model_photo_repository_impl.dart';
 import 'package:craft_cuts_mobile/haircut_demo/domain/usecase/fetch_haircuts_usecase.dart';
@@ -23,6 +24,7 @@ class InjectionContainer extends StatefulWidget {
 class _InjectionContainerState extends State<InjectionContainer> {
   late AuthNotifier _authNotifier;
   late HaircutDemoNotifier _haircutDemoNotifier;
+  late BookingNotifier _bookingNotifier;
 
   late RegisterUserUsecase _registerUserUsecase;
   late SignInUsecase _signInUsecase;
@@ -50,6 +52,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
     _getPhotoFromGalleryUseCase =
         GetPhotoFromGalleryUseCase(modelPhotoRepository);
     _fetchHaircutsUseCase = FetchHaircutsUseCase(haircutsRepository);
+
     _haircutDemoNotifier = HaircutDemoNotifier(
       _getPhotoFromCameraUseCase,
       _getPhotoFromGalleryUseCase,
@@ -58,6 +61,8 @@ class _InjectionContainerState extends State<InjectionContainer> {
     _haircutDemoNotifier
         .subscribeToModelPhoto(modelPhotoRepository.photoStream);
     _haircutDemoNotifier.subscribeToHaircuts(haircutsRepository.haircutStream);
+
+    _bookingNotifier = BookingNotifier();
 
     super.initState();
   }
@@ -68,6 +73,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
       providers: [
         ChangeNotifierProvider.value(value: _authNotifier),
         ChangeNotifierProvider.value(value: _haircutDemoNotifier),
+        ChangeNotifierProvider.value(value: _bookingNotifier),
       ],
       child: widget.child,
     );

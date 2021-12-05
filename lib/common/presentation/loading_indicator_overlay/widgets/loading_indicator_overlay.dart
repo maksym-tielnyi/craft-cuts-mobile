@@ -12,24 +12,27 @@ class LoadingIndicatorOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        if (child != null) child!,
-        if (isLoading)
-          Stack(
-            children: [
-              Positioned.fill(
-                child: ModalBarrier(
-                  color: Colors.black.withOpacity(0.5),
-                  dismissible: false,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Stack(
+        children: [
+          if (child != null) child!,
+          if (isLoading)
+            Stack(
+              children: [
+                Positioned.fill(
+                  child: ModalBarrier(
+                    color: Colors.black.withOpacity(0.5),
+                    dismissible: false,
+                  ),
                 ),
-              ),
-              Center(
-                child: CircularProgressIndicator(),
-              ),
-            ],
-          ),
-      ],
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ],
+            ),
+        ],
+      ),
     );
   }
 }
