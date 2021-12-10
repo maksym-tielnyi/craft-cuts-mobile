@@ -1,12 +1,28 @@
+import 'package:craft_cuts_mobile/booking/domain/entities/barber.dart';
+import 'package:craft_cuts_mobile/booking/presentation/state/booking_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class MasterTile extends StatelessWidget {
+  final Barber _barber;
+
+  const MasterTile(
+    this._barber, {
+    Key? key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    final bookingNotifier = Provider.of<BookingNotifier>(context);
+
     return RadioListTile(
-      value: bool,
-      onChanged: (value) {},
+      value: _barber.email == bookingNotifier.booking?.masterEmail,
+      onChanged: (bool? value) {
+        if (true) {
+          bookingNotifier.masterEmail = _barber.email;
+        }
+      },
       groupValue: true,
       title: SafeArea(
         child: Card(
@@ -16,15 +32,14 @@ class MasterTile extends StatelessWidget {
           ),
           child: ListTile(
             leading: CircleAvatar(
-              backgroundImage:
-                  NetworkImage('https://derby.com.ua/img/team/1.jpg'),
+              backgroundImage: NetworkImage(_barber.photoName),
             ),
             title: Wrap(
               alignment: WrapAlignment.spaceBetween,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 Text(
-                  'Женя',
+                  _barber.name,
                   style: Theme.of(context).textTheme.subtitle1,
                 ),
                 Card(

@@ -2,6 +2,9 @@ import 'package:craft_cuts_mobile/auth/data/repositories/user_repository_impl.da
 import 'package:craft_cuts_mobile/auth/domain/usecases/register_user_usecase.dart';
 import 'package:craft_cuts_mobile/auth/domain/usecases/signin_usecase.dart';
 import 'package:craft_cuts_mobile/auth/presentation/state/auth_notifier.dart';
+import 'package:craft_cuts_mobile/booking/data/repositories/barber_repository_impl.dart';
+import 'package:craft_cuts_mobile/booking/domain/usecases/fetch_barbers_usecase.dart';
+import 'package:craft_cuts_mobile/booking/presentation/state/barber_notifier.dart';
 import 'package:craft_cuts_mobile/booking/presentation/state/booking_notifier.dart';
 import 'package:craft_cuts_mobile/haircut_demo/data/repositories/haircuts_repository_impl.dart';
 import 'package:craft_cuts_mobile/haircut_demo/data/repositories/model_photo_repository_impl.dart';
@@ -25,6 +28,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
   late AuthNotifier _authNotifier;
   late HaircutDemoNotifier _haircutDemoNotifier;
   late BookingNotifier _bookingNotifier;
+  late BarberNotifier _barberNotifier;
 
   late RegisterUserUsecase _registerUserUsecase;
   late SignInUsecase _signInUsecase;
@@ -33,11 +37,14 @@ class _InjectionContainerState extends State<InjectionContainer> {
   late GetPhotoFromCameraUseCase _getPhotoFromCameraUseCase;
   late FetchHaircutsUseCase _fetchHaircutsUseCase;
 
+  late FetchBarbersUsecase _fetchBarbersUsecase;
+
   @override
   void initState() {
     final userRepository = UserRepositoryImpl();
     final modelPhotoRepository = ModelPhotoRepositoryImpl();
     final haircutsRepository = HaircutsRepositoryImpl();
+    final barberRepository = BarberRepositoryImpl();
 
     _registerUserUsecase = RegisterUserUsecase(userRepository);
     _signInUsecase = SignInUsecase(userRepository);
@@ -64,6 +71,10 @@ class _InjectionContainerState extends State<InjectionContainer> {
 
     _bookingNotifier = BookingNotifier();
 
+    _fetchBarbersUsecase = FetchBarbersUsecase(barberRepository);
+    _barberNotifier = BarberNotifier(_fetchBarbersUsecase);
+    _barberNotifier.subscribeToBarbers(barberRepository.barbersStream);
+
     super.initState();
   }
 
@@ -74,6 +85,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
         ChangeNotifierProvider.value(value: _authNotifier),
         ChangeNotifierProvider.value(value: _haircutDemoNotifier),
         ChangeNotifierProvider.value(value: _bookingNotifier),
+        ChangeNotifierProvider.value(value: _barberNotifier),
       ],
       child: widget.child,
     );

@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:craft_cuts_mobile/auth/domain/entities/user.dart';
 import 'package:craft_cuts_mobile/auth/domain/repositories/exceptions/auth_response_exception.dart';
 import 'package:craft_cuts_mobile/auth/domain/repositories/user_repository.dart';
 import 'package:craft_cuts_mobile/common/config/api_config.dart';
+import 'package:craft_cuts_mobile/common/utils/http_response_utils.dart';
 import 'package:http/http.dart' as http;
 
 class UserRepositoryImpl implements UserRepository {
@@ -61,25 +61,20 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   void _processSignInResponseOk(http.Response response) {
-    final decodedResponse = _parseHttpResponse(response);
+    final decodedResponse = HttpResponseUtils.parseHttpResponse(response);
     final user = User.fromJson(decodedResponse);
     _currentUserController.sink.add(user);
   }
 
   void _processRegisterResponseOK(http.Response response) {
-    final decodedResponse = _parseHttpResponse(response);
+    final decodedResponse = HttpResponseUtils.parseHttpResponse(response);
     final user = User.fromJson(decodedResponse);
     _currentUserController.sink.add(user);
   }
 
   void _processStatusCodeFailed(http.Response response) {
-    final bodyMap = _parseHttpResponse(response);
+    final bodyMap = HttpResponseUtils.parseHttpResponse(response);
     final parsedReason = bodyMap['message'];
     throw AuthResponseException(parsedReason ?? response.statusCode.toString());
-  }
-
-  Map<String, dynamic> _parseHttpResponse(http.Response response) {
-    final decodedString = utf8.decode(response.bodyBytes);
-    return jsonDecode(decodedString) as Map<String, dynamic>;
   }
 }

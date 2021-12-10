@@ -39,6 +39,8 @@ dependencies:
   image: ^3.0.8
   flutter_secure_storage: ^5.0.2
   intl: ^0.17.0
+  copy_with_utils:
+    git: https://github.com/Mmaksymmt/copy_with_utils.git
 
 dev_dependencies:
   flutter_test:

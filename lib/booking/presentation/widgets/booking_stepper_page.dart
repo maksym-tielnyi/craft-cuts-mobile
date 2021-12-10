@@ -1,3 +1,5 @@
+import 'package:craft_cuts_mobile/booking/domain/entities/barber.dart';
+import 'package:craft_cuts_mobile/booking/presentation/state/barber_notifier.dart';
 import 'package:craft_cuts_mobile/booking/presentation/state/booking_notifier.dart';
 import 'package:craft_cuts_mobile/booking/presentation/widgets/master_tile.dart';
 import 'package:craft_cuts_mobile/booking/presentation/widgets/service_tile.dart';
@@ -32,17 +34,24 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
   BookingNotifier get _bookingNotifier =>
       Provider.of<BookingNotifier>(context, listen: false);
 
+  BarberNotifier get _barberNotifier =>
+      Provider.of<BarberNotifier>(context, listen: false);
+
   @override
   void initState() {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      _barberNotifier.fetchBarbers();
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final _bookingNotifier = Provider.of<BookingNotifier>(context);
+    final bookingNotifier = Provider.of<BookingNotifier>(context);
+    final barberNotifier = Provider.of<BarberNotifier>(context);
 
     return LoadingIndicatorOverlay(
-      isLoading: _bookingNotifier.isLoading,
+      isLoading: bookingNotifier.isLoading,
       child: Scaffold(
         appBar: AppBar(
           title: Text(CommonStrings.book),
@@ -52,7 +61,7 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
           currentStep: _currentStep,
           onStepContinue: () async {
             if (_currentStep == _BookingSteps.dateTime.index) {
-              await _bookingNotifier.confirmBooking();
+              await bookingNotifier.confirmBooking();
             } else {
               setState(() {
                 _currentStep++;
@@ -90,6 +99,8 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
   }
 
   List<Step> _buildSteps(int index) {
+    final barberNotifier = Provider.of<BarberNotifier>(context, listen: false);
+
     return <Step>[
       Step(
         isActive: index == _BookingSteps.masters.index,
@@ -98,18 +109,29 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
           CommonStrings.chooseSpecialist,
           style: Theme.of(context).textTheme.headline4,
         ),
-        content: Expanded(
-          child: Column(
-            children: [
-              ListView.builder(
-                physics: const AlwaysScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: 2,
-                itemBuilder: (_, index) => MasterTile(),
+        content: Builder(builder: (context) {
+          if (barberNotifier.isLoading || barberNotifier.barbers == null) {
+            return Expanded(
+              child: Center(
+                child: CircularProgressIndicator(),
               ),
-            ],
-          ),
-        ),
+            );
+          }
+
+          return Expanded(
+            child: Column(
+              children: [
+                ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: barberNotifier.barbers!.length,
+                  itemBuilder: (_, index) =>
+                      MasterTile(_barberNotifier.barbers![index]),
+                ),
+              ],
+            ),
+          );
+        }),
       ),
       Step(
         isActive: index == _BookingSteps.service.index,
@@ -224,7 +246,9 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
                 shrinkWrap: true,
                 itemCount: 5,
                 itemBuilder: (_, index) {
-                  return MasterTile();
+                  return MasterTile(
+                    Barber(12, '', '', ''),
+                  );
                 },
               ),
             ),
