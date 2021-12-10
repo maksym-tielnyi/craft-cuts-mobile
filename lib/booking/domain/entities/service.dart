@@ -1,17 +1,24 @@
+import 'package:copy_with_utils/copy_with_utils.dart';
+
 class Service {
-  final String? id;
-  final String? name;
-  final double? price;
+  final int id;
+  final String name;
+  final double price;
   final String? description;
 
   Service(this.id, this.name, this.price, this.description);
 
-  factory Service.fromJson(Map<String, dynamic> map) {
+  Service copyWith({
+    ValueCallback<int>? id,
+    ValueCallback<String>? name,
+    ValueCallback<double>? price,
+    ValueCallback<String?>? description,
+  }) {
     return Service(
-      map['service_id'] as String?,
-      map['name'] as String?,
-      map['price'] as double?,
-      map['description'] as String?,
+      switcher(id, this.id),
+      switcher(name, this.name),
+      switcher(price, this.price),
+      switcher(description, this.description),
     );
   }
 }

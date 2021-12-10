@@ -1,6 +1,7 @@
 import 'package:craft_cuts_mobile/booking/domain/entities/barber.dart';
 import 'package:craft_cuts_mobile/booking/presentation/state/barber_notifier.dart';
 import 'package:craft_cuts_mobile/booking/presentation/state/booking_notifier.dart';
+import 'package:craft_cuts_mobile/booking/presentation/state/service_notifier.dart';
 import 'package:craft_cuts_mobile/booking/presentation/widgets/master_tile.dart';
 import 'package:craft_cuts_mobile/booking/presentation/widgets/service_tile.dart';
 import 'package:craft_cuts_mobile/common/presentation/loading_indicator_overlay/widgets/loading_indicator_overlay.dart';
@@ -37,10 +38,14 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
   BarberNotifier get _barberNotifier =>
       Provider.of<BarberNotifier>(context, listen: false);
 
+  ServiceNotifier get _serviceNotifier =>
+      Provider.of<ServiceNotifier>(context, listen: false);
+
   @override
   void initState() {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       _barberNotifier.fetchBarbers();
+      _serviceNotifier.fetchServices();
     });
     super.initState();
   }
@@ -49,6 +54,7 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
   Widget build(BuildContext context) {
     final bookingNotifier = Provider.of<BookingNotifier>(context);
     final barberNotifier = Provider.of<BarberNotifier>(context);
+    final serviceNotifier = Provider.of<ServiceNotifier>(context);
 
     return LoadingIndicatorOverlay(
       isLoading: bookingNotifier.isLoading,
@@ -99,8 +105,6 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
   }
 
   List<Step> _buildSteps(int index) {
-    final barberNotifier = Provider.of<BarberNotifier>(context, listen: false);
-
     return <Step>[
       Step(
         isActive: index == _BookingSteps.masters.index,
@@ -110,7 +114,7 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
           style: Theme.of(context).textTheme.headline4,
         ),
         content: Builder(builder: (context) {
-          if (barberNotifier.isLoading || barberNotifier.barbers == null) {
+          if (_barberNotifier.isLoading || _barberNotifier.barbers == null) {
             return Expanded(
               child: Center(
                 child: CircularProgressIndicator(),
@@ -124,7 +128,7 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
                 ListView.builder(
                   physics: const AlwaysScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: barberNotifier.barbers!.length,
+                  itemCount: _barberNotifier.barbers?.length,
                   itemBuilder: (_, index) =>
                       MasterTile(_barberNotifier.barbers![index]),
                 ),
@@ -142,49 +146,62 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
             style: Theme.of(context).textTheme.headline4,
           ),
         ),
-        content: Column(
-          children: [
-            ExpansionTile(
-              title: Text(
-                CommonStrings.haircut,
-                style: Theme.of(context).textTheme.headline3,
+        content: Builder(builder: (context) {
+          if (_serviceNotifier.isLoading || _serviceNotifier.services == null) {
+            return Expanded(
+              child: Center(
+                child: CircularProgressIndicator(),
               ),
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: 4,
-                  itemBuilder: (_, index) => ServiceTile(),
+            );
+          }
+
+          return Column(
+            children: [
+              ExpansionTile(
+                title: Text(
+                  CommonStrings.haircut,
+                  style: Theme.of(context).textTheme.headline3,
                 ),
-              ],
-            ),
-            ExpansionTile(
-              title: Text(
-                CommonStrings.painting,
-                style: Theme.of(context).textTheme.headline3,
+                children: [
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: _serviceNotifier.services?.length,
+                    itemBuilder: (_, index) =>
+                        ServiceTile(_serviceNotifier.services![index]),
+                  ),
+                ],
               ),
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: 6,
-                  itemBuilder: (_, index) => ServiceTile(),
+              ExpansionTile(
+                title: Text(
+                  CommonStrings.painting,
+                  style: Theme.of(context).textTheme.headline3,
                 ),
-              ],
-            ),
-            ExpansionTile(
-              title: Text(
-                CommonStrings.beard,
-                style: Theme.of(context).textTheme.headline3,
+                children: [
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: _serviceNotifier.services?.length,
+                    itemBuilder: (_, index) =>
+                        ServiceTile(_serviceNotifier.services![index]),
+                  ),
+                ],
               ),
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: 6,
-                  itemBuilder: (_, index) => ServiceTile(),
+              ExpansionTile(
+                title: Text(
+                  CommonStrings.beard,
+                  style: Theme.of(context).textTheme.headline3,
                 ),
-              ],
-            ),
-          ],
-        ),
+                children: [
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: _serviceNotifier.services!.length,
+                    itemBuilder: (_, index) =>
+                        ServiceTile(_serviceNotifier.services![index]),
+                  ),
+                ],
+              ),
+            ],
+          );
+        }),
       ),
       Step(
         isActive: index == _BookingSteps.dateTime.index,

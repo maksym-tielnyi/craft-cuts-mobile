@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:craft_cuts_mobile/booking/data/mappers/barber_entity_mapper.dart';
 import 'package:craft_cuts_mobile/booking/domain/entities/barber.dart';
 import 'package:craft_cuts_mobile/booking/domain/entities/errors/barber_fetch_failed.dart';
-import 'package:craft_cuts_mobile/booking/domain/entities/errors/booking_failed.dart';
 import 'package:craft_cuts_mobile/booking/domain/repositories/barber_repository.dart';
 import 'package:craft_cuts_mobile/common/config/api_config.dart';
 import 'package:craft_cuts_mobile/common/utils/http_response_utils.dart';
@@ -13,7 +12,7 @@ import 'package:http/http.dart' as http;
 
 class BarberRepositoryImpl implements BarberRepository {
   static const _unencodedBarbersPath = 'api/Barber';
-  final client = http.Client();
+  final _client = http.Client();
   final _barbersController = StreamController<List<Barber>?>();
 
   @override
@@ -23,10 +22,10 @@ class BarberRepositoryImpl implements BarberRepository {
   Future<void> fetchBarbers() async {
     try {
       final requestUri = Uri.https(Api.baseUrl, _unencodedBarbersPath);
-      final response = await client.get(requestUri);
+      final response = await _client.get(requestUri);
       _processBarbersResponse(response);
     } catch (e) {
-      throw BookingFailed(description: e.toString());
+      throw BarberFetchFailed(description: e.toString());
     }
   }
 

@@ -3,9 +3,12 @@ import 'package:craft_cuts_mobile/auth/domain/usecases/register_user_usecase.dar
 import 'package:craft_cuts_mobile/auth/domain/usecases/signin_usecase.dart';
 import 'package:craft_cuts_mobile/auth/presentation/state/auth_notifier.dart';
 import 'package:craft_cuts_mobile/booking/data/repositories/barber_repository_impl.dart';
+import 'package:craft_cuts_mobile/booking/data/repositories/service_repository_impl.dart';
 import 'package:craft_cuts_mobile/booking/domain/usecases/fetch_barbers_usecase.dart';
+import 'package:craft_cuts_mobile/booking/domain/usecases/fetch_services_usecase.dart';
 import 'package:craft_cuts_mobile/booking/presentation/state/barber_notifier.dart';
 import 'package:craft_cuts_mobile/booking/presentation/state/booking_notifier.dart';
+import 'package:craft_cuts_mobile/booking/presentation/state/service_notifier.dart';
 import 'package:craft_cuts_mobile/haircut_demo/data/repositories/haircuts_repository_impl.dart';
 import 'package:craft_cuts_mobile/haircut_demo/data/repositories/model_photo_repository_impl.dart';
 import 'package:craft_cuts_mobile/haircut_demo/domain/usecase/fetch_haircuts_usecase.dart';
@@ -29,6 +32,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
   late HaircutDemoNotifier _haircutDemoNotifier;
   late BookingNotifier _bookingNotifier;
   late BarberNotifier _barberNotifier;
+  late ServiceNotifier _serviceNotifier;
 
   late RegisterUserUsecase _registerUserUsecase;
   late SignInUsecase _signInUsecase;
@@ -39,12 +43,15 @@ class _InjectionContainerState extends State<InjectionContainer> {
 
   late FetchBarbersUsecase _fetchBarbersUsecase;
 
+  late FetchServicesUsecase _fetchServicesUsecase;
+
   @override
   void initState() {
     final userRepository = UserRepositoryImpl();
     final modelPhotoRepository = ModelPhotoRepositoryImpl();
     final haircutsRepository = HaircutsRepositoryImpl();
     final barberRepository = BarberRepositoryImpl();
+    final serviceRepository = ServiceRepositoryImpl();
 
     _registerUserUsecase = RegisterUserUsecase(userRepository);
     _signInUsecase = SignInUsecase(userRepository);
@@ -75,6 +82,10 @@ class _InjectionContainerState extends State<InjectionContainer> {
     _barberNotifier = BarberNotifier(_fetchBarbersUsecase);
     _barberNotifier.subscribeToBarbers(barberRepository.barbersStream);
 
+    _fetchServicesUsecase = FetchServicesUsecase(serviceRepository);
+    _serviceNotifier = ServiceNotifier(_fetchServicesUsecase);
+    _serviceNotifier.subscribeToServices(serviceRepository.servicesStream);
+
     super.initState();
   }
 
@@ -86,6 +97,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
         ChangeNotifierProvider.value(value: _haircutDemoNotifier),
         ChangeNotifierProvider.value(value: _bookingNotifier),
         ChangeNotifierProvider.value(value: _barberNotifier),
+        ChangeNotifierProvider.value(value: _serviceNotifier),
       ],
       child: widget.child,
     );

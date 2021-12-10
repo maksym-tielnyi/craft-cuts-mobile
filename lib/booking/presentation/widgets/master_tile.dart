@@ -18,10 +18,8 @@ class MasterTile extends StatelessWidget {
 
     return RadioListTile(
       value: _barber.email == bookingNotifier.booking?.masterEmail,
-      onChanged: (bool? value) {
-        if (true) {
-          bookingNotifier.masterEmail = _barber.email;
-        }
+      onChanged: (_) {
+        bookingNotifier.masterEmail = _barber.email;
       },
       groupValue: true,
       title: SafeArea(
