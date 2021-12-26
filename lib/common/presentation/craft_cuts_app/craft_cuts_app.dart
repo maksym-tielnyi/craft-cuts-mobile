@@ -111,6 +111,9 @@ class CraftCutsApp extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.0),
             ),
           ),
+          dividerTheme: DividerThemeData(
+            thickness: 2.0,
+          ),
         ),
         navigatorKey: _navigatorKey,
         builder: (context, widget) {
