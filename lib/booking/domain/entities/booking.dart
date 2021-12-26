@@ -1,17 +1,18 @@
 import 'package:copy_with_utils/copy_with_utils.dart';
+import 'package:craft_cuts_mobile/booking/domain/entities/barber.dart';
 import 'package:craft_cuts_mobile/booking/domain/entities/service.dart';
 import 'package:flutter/material.dart';
 
 class Booking {
-  final String? masterEmail;
+  final Barber? master;
   final DateTime? date;
   final DateTime? time;
   final Service? service;
 
-  Booking({this.masterEmail, this.date, this.time, this.service});
+  Booking({this.master, this.date, this.time, this.service});
 
   Booking copyWith({
-    ValueCallback<String?>? masterEmail,
+    ValueCallback<Barber?>? master,
     ValueCallback<DateTime?>? date,
     ValueCallback<DateTime?>? time,
     ValueCallback<Service?>? service,
@@ -19,7 +20,7 @@ class Booking {
     final dateVal = switcher(date, this.date);
 
     return Booking(
-      masterEmail: switcher(masterEmail, this.masterEmail),
+      master: switcher(master, this.master),
       date: dateVal == null ? dateVal : DateUtils.dateOnly(dateVal),
       time: switcher(time, this.time),
       service: switcher(service, this.service),

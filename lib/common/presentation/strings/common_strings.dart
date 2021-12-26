@@ -26,13 +26,13 @@ class CommonStrings {
   static const camera = 'Камера';
   static const gallery = 'Галлерея';
   static const empty = 'Пусто';
-  static const chooseSpecialist = 'Выберите специалиста';
+  static const chooseSpecialist = 'Мастер';
   static const onlineBooking = 'Онлайн запись';
-  static const chooseVariant = 'Выберите нужный вариант';
+  static const chooseVariant = 'Сервис';
   static const haircut = 'Стрижка';
   static const painting = 'Покраска';
   static const beard = 'Борода';
-  static const selectDateAndTime = 'Выберите удобное время и дату';
+  static const selectDateAndTime = 'Время';
   static const time = 'Время';
   static const bookingSuccessMessage = 'Запись прошла успешно!';
   static const bookingErrorDefaultMessage = 'Что-то пошло не так!';

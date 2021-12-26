@@ -3,7 +3,9 @@ import 'package:craft_cuts_mobile/auth/domain/usecases/register_user_usecase.dar
 import 'package:craft_cuts_mobile/auth/domain/usecases/signin_usecase.dart';
 import 'package:craft_cuts_mobile/auth/presentation/state/auth_notifier.dart';
 import 'package:craft_cuts_mobile/booking/data/repositories/barber_repository_impl.dart';
+import 'package:craft_cuts_mobile/booking/data/repositories/booking_repository_impl.dart';
 import 'package:craft_cuts_mobile/booking/data/repositories/service_repository_impl.dart';
+import 'package:craft_cuts_mobile/booking/domain/usecases/add_booking_usecase.dart';
 import 'package:craft_cuts_mobile/booking/domain/usecases/fetch_barbers_usecase.dart';
 import 'package:craft_cuts_mobile/booking/domain/usecases/fetch_services_usecase.dart';
 import 'package:craft_cuts_mobile/booking/presentation/state/barber_notifier.dart';
@@ -45,6 +47,8 @@ class _InjectionContainerState extends State<InjectionContainer> {
 
   late FetchServicesUsecase _fetchServicesUsecase;
 
+  late AddBookingUseCase _addBookingUseCase;
+
   @override
   void initState() {
     final userRepository = UserRepositoryImpl();
@@ -52,6 +56,10 @@ class _InjectionContainerState extends State<InjectionContainer> {
     final haircutsRepository = HaircutsRepositoryImpl();
     final barberRepository = BarberRepositoryImpl();
     final serviceRepository = ServiceRepositoryImpl();
+    final bookingRepository = BookingRepositoryImpl();
+
+    _addBookingUseCase = AddBookingUseCase(bookingRepository);
+    _bookingNotifier = BookingNotifier(_addBookingUseCase);
 
     _registerUserUsecase = RegisterUserUsecase(userRepository);
     _signInUsecase = SignInUsecase(userRepository);
@@ -60,6 +68,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
       _signInUsecase,
     );
     _authNotifier.subscribeToAuthUpdates(userRepository.currentUser);
+    _authNotifier.addListener(_authNotifierListener);
 
     _getPhotoFromCameraUseCase =
         GetPhotoFromCameraUseCase(modelPhotoRepository);
@@ -76,8 +85,6 @@ class _InjectionContainerState extends State<InjectionContainer> {
         .subscribeToModelPhoto(modelPhotoRepository.photoStream);
     _haircutDemoNotifier.subscribeToHaircuts(haircutsRepository.haircutStream);
 
-    _bookingNotifier = BookingNotifier();
-
     _fetchBarbersUsecase = FetchBarbersUsecase(barberRepository);
     _barberNotifier = BarberNotifier(_fetchBarbersUsecase);
     _barberNotifier.subscribeToBarbers(barberRepository.barbersStream);
@@ -89,6 +96,10 @@ class _InjectionContainerState extends State<InjectionContainer> {
     super.initState();
   }
 
+  void _authNotifierListener() {
+    _bookingNotifier.handleCurrentUserUpdate(_authNotifier.currentUser);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -98,8 +109,19 @@ class _InjectionContainerState extends State<InjectionContainer> {
         ChangeNotifierProvider.value(value: _bookingNotifier),
         ChangeNotifierProvider.value(value: _barberNotifier),
         ChangeNotifierProvider.value(value: _serviceNotifier),
+        ChangeNotifierProvider.value(value: _bookingNotifier),
       ],
       child: widget.child,
     );
+  }
+
+  @override
+  void dispose() {
+    _closeSubscriptions();
+    super.dispose();
+  }
+
+  void _closeSubscriptions() {
+    _authNotifier.removeListener(_authNotifierListener);
   }
 }

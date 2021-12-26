@@ -25,6 +25,8 @@ class AuthNotifier extends ChangeNotifier {
     this._signInUsecase,
   );
 
+  User? get currentUser => _user;
+
   bool get isLoggedIn => _user != null;
 
   bool get isLoading => _isLoading;
