@@ -27,6 +27,7 @@ class HomePagePageView extends StatefulWidget {
 }
 
 class _HomePageBody extends State<HomePagePageView> {
+  static const int _homePageIndex = 0;
   static const int _haircutDemoPageIndex = 1;
 
   final _pageController = PageController();
@@ -47,7 +48,15 @@ class _HomePageBody extends State<HomePagePageView> {
             );
           },
         ),
-        HaircutDemoPage(),
+        HaircutDemoPage(
+          returnCallback: () async {
+            await _pageController.animateToPage(
+              _homePageIndex,
+              duration: Duration(milliseconds: 400),
+              curve: Curves.easeIn,
+            );
+          },
+        ),
       ],
     );
   }

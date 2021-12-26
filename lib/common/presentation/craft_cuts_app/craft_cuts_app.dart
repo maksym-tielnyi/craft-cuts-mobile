@@ -39,8 +39,29 @@ class CraftCutsApp extends StatelessWidget {
 
             // Used in page titles
             headline2: GoogleFonts.inter(
+              fontSize: 26.0,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+
+            // Used in page subtitles
+            headline3: GoogleFonts.inter(
               fontSize: 22.0,
               fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+
+            // Used in page subtitles subtitles
+            headline4: GoogleFonts.inter(
+              fontSize: 17.0,
+              fontWeight: FontWeight.w500,
+              color: Color(0xFF565656),
+            ),
+
+            // Used on some buttons
+            headline5: GoogleFonts.inter(
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
               color: Colors.black,
             ),
           ),
@@ -96,22 +117,26 @@ class CraftCutsApp extends StatelessWidget {
           final navigator = _navigatorKey.currentState;
           final authNotifier =
               Provider.of<AuthNotifier>(context, listen: false);
-          authNotifier.addListener(() {
-            if (!authNotifier.isLoading) {
-              if (authNotifier.isLoggedIn) {
-                navigator!.pushNamedAndRemoveUntil(
-                  RouteNames.homePage,
-                  (_) => false,
-                );
-              } else if (authNotifier.signInStateViewModel.lastException ==
-                  null) {
-                navigator!.pushNamedAndRemoveUntil(
-                  RouteNames.loginPage,
-                  (_) => false,
-                );
+          authNotifier.addListener(
+            () {
+              if (!authNotifier.isLoading) {
+                if (authNotifier.isLoggedIn) {
+                  if (navigator == null) {
+                    WidgetsBinding.instance!.addPostFrameCallback(
+                      (_) {
+                        _navigateToRoute(RouteNames.homePage);
+                      },
+                    );
+                  } else {
+                    _navigateToRoute(RouteNames.homePage);
+                  }
+                } else if (authNotifier.signInStateViewModel.lastException ==
+                    null) {
+                  _navigateToRoute(RouteNames.loginPage);
+                }
               }
-            }
-          });
+            },
+          );
           return widget!;
         },
         routes: {
@@ -121,6 +146,13 @@ class CraftCutsApp extends StatelessWidget {
           RouteNames.homePage: (_) => MainPage(),
         },
       ),
+    );
+  }
+
+  void _navigateToRoute(String name) {
+    _navigatorKey.currentState?.pushNamedAndRemoveUntil(
+      name,
+      (_) => false,
     );
   }
 }

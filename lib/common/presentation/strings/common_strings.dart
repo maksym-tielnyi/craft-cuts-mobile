@@ -1,34 +1,40 @@
 class CommonStrings {
-  static const String craftCuts = 'Craft Cuts';
-  static const String login = 'Войти';
-  static const String register = 'Зарегистрироваться';
-  static const String name = 'Имя';
-  static const String email = 'Почта';
-  static const String password = 'Пароль';
-  static const String phoneNumber = 'Phone number';
-  static const String birthday = 'Birthday';
-  static const String show = 'Показать';
-  static const String hide = 'Спрятать';
-  static const String receiveNewsAndNotificationsAgreement =
+  static const craftCuts = 'Craft Cuts';
+  static const login = 'Войти';
+  static const register = 'Зарегистрироваться';
+  static const name = 'Имя';
+  static const email = 'Почта';
+  static const password = 'Пароль';
+  static const phoneNumber = 'Phone number';
+  static const birthday = 'Birthday';
+  static const show = 'Показать';
+  static const hide = 'Спрятать';
+  static const receiveNewsAndNotificationsAgreement =
       'Я хотел бы получать новости и напоминания от приложения';
-  static const String alreadyHaveAccount =
-      'У Вас уже есть аккаунт? Войдите тут';
-  static const String emptyInputFieldMessage = 'Это поле должно быть заполнено';
-  static const String doNotHaveAccount =
+  static const alreadyHaveAccount = 'У Вас уже есть аккаунт? Войдите тут';
+  static const emptyInputFieldMessage = 'Это поле должно быть заполнено';
+  static const doNotHaveAccount =
       'У Вас еще нет аккаунта? Зарегистрируйтесь тут';
-
-  static const String home = 'Главная';
-  static const String onlineHaircut = 'Онлайн стрижка';
-  static const String services = 'Услуги';
-  static const String masters = 'Мастера';
-  static const String book = 'Записаться';
-  static const String profile = 'Профиль';
-
-  static const String ok = 'Ok';
-  static const String search = 'Поиск';
-
-  static const String camera = 'Камера';
-  static const String gallery = 'Галлерея';
-
-  static const String empty = 'Пусто';
+  static const home = 'Главная';
+  static const onlineHaircut = 'Онлайн стрижка';
+  static const services = 'Услуги';
+  static const masters = 'Мастера';
+  static const book = 'Записаться';
+  static const profile = 'Профиль';
+  static const ok = 'Ok';
+  static const search = 'Поиск';
+  static const camera = 'Камера';
+  static const gallery = 'Галлерея';
+  static const empty = 'Пусто';
+  static const chooseSpecialist = 'Мастер';
+  static const onlineBooking = 'Онлайн запись';
+  static const chooseVariant = 'Сервис';
+  static const haircut = 'Стрижка';
+  static const painting = 'Покраска';
+  static const beard = 'Борода';
+  static const selectDateAndTime = 'Время';
+  static const time = 'Время';
+  static const bookingSuccessMessage = 'Запись прошла успешно!';
+  static const bookingErrorDefaultMessage = 'Что-то пошло не так!';
+  static const gotoBookings = 'Перейти к моим записям';
 }

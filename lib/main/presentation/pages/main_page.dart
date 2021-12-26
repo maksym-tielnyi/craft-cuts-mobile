@@ -1,3 +1,4 @@
+import 'package:craft_cuts_mobile/booking/presentation/widgets/booking_page_page_view.dart';
 import 'package:craft_cuts_mobile/common/presentation/strings/common_strings.dart';
 import 'package:craft_cuts_mobile/home/presentation/widgets/home_page_page_view.dart';
 import 'package:flutter/material.dart';
@@ -20,33 +21,33 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: PageView(
-          controller: _pageController,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            HomePagePageView(
-              pageController: _pageController,
-            ),
-            Scaffold(
-              appBar: AppBar(
-                title: Text(CommonStrings.services),
+        child: SafeArea(
+          child: PageView(
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              HomePagePageView(
+                pageController: _pageController,
               ),
-            ),
-            Scaffold(
-              appBar: AppBar(
-                title: Text(CommonStrings.book),
+              Scaffold(
+                appBar: AppBar(
+                  title: Text(CommonStrings.services),
+                ),
               ),
-            ),
-            Scaffold(
-              appBar: AppBar(
-                title: Text(CommonStrings.profile),
+              BookingPagePageView(),
+              Scaffold(
+                appBar: AppBar(
+                  title: Text(CommonStrings.profile),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: _currentPageIndex,
         onTap: _onBottomNavigationBarTap,
         items: [
