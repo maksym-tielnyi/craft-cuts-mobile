@@ -1,6 +1,7 @@
 import 'package:craft_cuts_mobile/booking/presentation/widgets/booking_page_page_view.dart';
 import 'package:craft_cuts_mobile/common/presentation/strings/common_strings.dart';
 import 'package:craft_cuts_mobile/home/presentation/widgets/home_page_page_view.dart';
+import 'package:craft_cuts_mobile/profile/presentation/widgets/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -36,12 +37,8 @@ class _MainPageState extends State<MainPage> {
                   title: Text(CommonStrings.services),
                 ),
               ),
-              BookingPagePageView(),
-              Scaffold(
-                appBar: AppBar(
-                  title: Text(CommonStrings.profile),
-                ),
-              ),
+              const BookingPagePageView(),
+              const ProfilePage(),
             ],
           ),
         ),

@@ -37,4 +37,7 @@ class CommonStrings {
   static const bookingSuccessMessage = 'Запись прошла успешно!';
   static const bookingErrorDefaultMessage = 'Что-то пошло не так!';
   static const gotoBookings = 'Перейти к моим записям';
+  static const logOut = 'Выйти';
+  static const yourAppointments = 'Ваши записи';
+  static const makeAnAppointment = 'Записаться к барберу';
 }

@@ -14,7 +14,7 @@ class BookingNotifier extends ChangeNotifier {
   bool? _lastBookingSuccessful;
   BookingErrorViewModel? _lastError;
   Booking? _booking;
-  User? _currentUserId;
+  User? _currentUser;
 
   BookingNotifier(this._addBookingUseCase);
 
@@ -27,12 +27,12 @@ class BookingNotifier extends ChangeNotifier {
   BookingErrorViewModel? get lastError => _lastError;
 
   void handleCurrentUserUpdate(User? user) {
-    _currentUserId = user;
+    _currentUser = user;
   }
 
   Future<void> confirmBooking() async {
     final bookingData = _booking;
-    final currentUserId = _currentUserId;
+    final currentUserId = _currentUser;
     if (bookingData == null || currentUserId == null) return;
     _clearBookingResultsState();
 
