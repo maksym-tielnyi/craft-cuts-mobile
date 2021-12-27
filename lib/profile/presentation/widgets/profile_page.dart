@@ -1,5 +1,6 @@
 import 'package:craft_cuts_mobile/auth/presentation/state/auth_notifier.dart';
 import 'package:craft_cuts_mobile/common/presentation/strings/common_strings.dart';
+import 'package:craft_cuts_mobile/profile/presentation/widgets/appointments_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -58,8 +59,9 @@ class _ProfilePageState extends State<ProfilePage> {
               CommonStrings.yourAppointments,
               style: Theme.of(context).textTheme.headline3,
             ),
-            // TODO: add appointments list
-            const Expanded(child: Center()),
+            const Expanded(
+              child: AppointmentsWidget(),
+            ),
             const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {},

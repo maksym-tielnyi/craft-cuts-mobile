@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class BookingPagePageView extends StatefulWidget {
+  const BookingPagePageView({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _BookingPagePageViewState();
 }
@@ -68,7 +70,9 @@ class _BookingPagePageViewState extends State<BookingPagePageView> {
 
   @override
   void dispose() {
-    _cancelSubscriptions();
+    if (mounted) {
+      _cancelSubscriptions();
+    }
     super.dispose();
   }
 

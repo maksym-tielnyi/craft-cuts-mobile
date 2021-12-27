@@ -37,7 +37,7 @@ class _MainPageState extends State<MainPage> {
                   title: Text(CommonStrings.services),
                 ),
               ),
-              BookingPagePageView(),
+              const BookingPagePageView(),
               const ProfilePage(),
             ],
           ),

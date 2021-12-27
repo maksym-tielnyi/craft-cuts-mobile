@@ -7,6 +7,7 @@ import 'package:craft_cuts_mobile/booking/data/repositories/booking_repository_i
 import 'package:craft_cuts_mobile/booking/data/repositories/service_repository_impl.dart';
 import 'package:craft_cuts_mobile/booking/domain/usecases/add_booking_usecase.dart';
 import 'package:craft_cuts_mobile/booking/domain/usecases/fetch_barbers_usecase.dart';
+import 'package:craft_cuts_mobile/booking/domain/usecases/fetch_customers_appointments.dart';
 import 'package:craft_cuts_mobile/booking/domain/usecases/fetch_services_usecase.dart';
 import 'package:craft_cuts_mobile/booking/presentation/state/barber_notifier.dart';
 import 'package:craft_cuts_mobile/booking/presentation/state/booking_notifier.dart';
@@ -17,6 +18,7 @@ import 'package:craft_cuts_mobile/haircut_demo/domain/usecase/fetch_haircuts_use
 import 'package:craft_cuts_mobile/haircut_demo/domain/usecase/get_photo_from_camera_usecase.dart';
 import 'package:craft_cuts_mobile/haircut_demo/domain/usecase/get_photo_from_gallery_usecase.dart';
 import 'package:craft_cuts_mobile/haircut_demo/presentation/state/haircut_demo_notifier.dart';
+import 'package:craft_cuts_mobile/profile/presentation/state/appointments_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,6 +37,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
   late BookingNotifier _bookingNotifier;
   late BarberNotifier _barberNotifier;
   late ServiceNotifier _serviceNotifier;
+  late AppointmentsNotifier _appointmentsNotifier;
 
   late RegisterUserUsecase _registerUserUsecase;
   late SignInUsecase _signInUsecase;
@@ -48,6 +51,8 @@ class _InjectionContainerState extends State<InjectionContainer> {
   late FetchServicesUsecase _fetchServicesUsecase;
 
   late AddBookingUseCase _addBookingUseCase;
+
+  late FetchCustomersAppointments _fetchCustomersAppointments;
 
   @override
   void initState() {
@@ -68,7 +73,6 @@ class _InjectionContainerState extends State<InjectionContainer> {
       _signInUsecase,
     );
     _authNotifier.subscribeToAuthUpdates(userRepository.currentUser);
-    _authNotifier.addListener(_authNotifierListener);
 
     _getPhotoFromCameraUseCase =
         GetPhotoFromCameraUseCase(modelPhotoRepository);
@@ -93,11 +97,28 @@ class _InjectionContainerState extends State<InjectionContainer> {
     _serviceNotifier = ServiceNotifier(_fetchServicesUsecase);
     _serviceNotifier.subscribeToServices(serviceRepository.servicesStream);
 
+    _fetchCustomersAppointments = FetchCustomersAppointments(bookingRepository);
+    _appointmentsNotifier = AppointmentsNotifier(_fetchCustomersAppointments);
+    _appointmentsNotifier
+        .subscribeToAppointmentsStream(bookingRepository.appointmentsStream);
+
+    _initializeSubscriptions();
     super.initState();
+  }
+
+  void _initializeSubscriptions() {
+    _authNotifier.addListener(_authNotifierListener);
+    _bookingNotifier.addListener(_bookingNotifierListener);
   }
 
   void _authNotifierListener() {
     _bookingNotifier.handleCurrentUserUpdate(_authNotifier.currentUser);
+    _appointmentsNotifier.handleCurrentUserUpdate(_authNotifier.currentUser);
+    _appointmentsNotifier.fetchCustomerAppointments();
+  }
+
+  void _bookingNotifierListener() {
+    _appointmentsNotifier.fetchCustomerAppointments();
   }
 
   @override
@@ -110,6 +131,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
         ChangeNotifierProvider.value(value: _barberNotifier),
         ChangeNotifierProvider.value(value: _serviceNotifier),
         ChangeNotifierProvider.value(value: _bookingNotifier),
+        ChangeNotifierProvider.value(value: _appointmentsNotifier),
       ],
       child: widget.child,
     );
@@ -123,5 +145,6 @@ class _InjectionContainerState extends State<InjectionContainer> {
 
   void _closeSubscriptions() {
     _authNotifier.removeListener(_authNotifierListener);
+    _bookingNotifier.removeListener(_bookingNotifierListener);
   }
 }
